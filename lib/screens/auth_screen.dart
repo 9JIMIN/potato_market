@@ -10,7 +10,9 @@ class AuthScreen extends StatelessWidget {
       body: Center(
         child: SizedBox(
           width: 200,
-          child: Card(child: AuthForm()),
+          child: Card(
+            child: AuthForm(),
+          ),
         ),
       ),
     );
@@ -52,15 +54,12 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   void _register() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
     setState(() {
       _isLoading = true;
     });
-    if (!_formKey.currentState.validate()) {
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
     _formKey.currentState.save();
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -91,15 +90,12 @@ class _AuthFormState extends State<AuthForm> {
   }
 
   void _login() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
     setState(() {
       _isLoading = true;
     });
-    if (!_formKey.currentState.validate()) {
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
     _formKey.currentState.save();
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
