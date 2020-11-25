@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
-class AuthScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +11,7 @@ class AuthScreen extends StatelessWidget {
         child: SizedBox(
           width: 200,
           child: Card(
-            child: AuthForm(),
+            child: LoginForm(),
           ),
         ),
       ),
@@ -19,12 +19,12 @@ class AuthScreen extends StatelessWidget {
   }
 }
 
-class AuthForm extends StatefulWidget {
+class LoginForm extends StatefulWidget {
   @override
   _AuthFormState createState() => _AuthFormState();
 }
 
-class _AuthFormState extends State<AuthForm> {
+class _AuthFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   var _name = '';
   var _email = '';

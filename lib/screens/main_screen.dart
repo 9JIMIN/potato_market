@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 import './products/products_appbar.dart';
 import './community/community_appbar.dart';
@@ -13,6 +14,7 @@ import './chatting/chatting_body.dart';
 import './myprofile/myprofile_body.dart';
 
 import './editor/editor_scaffold.dart';
+import './editor/editor_provider.dart';
 
 class MainScreen extends StatefulWidget {
   @override

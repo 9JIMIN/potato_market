@@ -12,10 +12,11 @@ dependencies:
     sdk: flutter
   firebase_core:
   firebase_auth:
+  firebase_storage:
   cloud_firestore:
   provider:
-
-  cupertino_icons: ^1.0.1
+  multi_image_picker:
+  modal_progress_hud:
 
 dev_dependencies:
   flutter_test:
