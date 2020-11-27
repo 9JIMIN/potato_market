@@ -15,7 +15,7 @@ class EditorAppbar extends StatelessWidget implements PreferredSizeWidget {
         FlatButton(
           child: Text('완료'),
           onPressed: () async {
-            await model.addProducts();
+            await model.addProduct();
             Navigator.of(context).pop();
           },
         )

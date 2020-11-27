@@ -16,7 +16,7 @@ class EditorProvider extends ChangeNotifier {
 
   bool isLoading = false;
 
-  Future<void> addProducts() async {
+  Future<void> addProduct() async {
     isLoading = true;
     notifyListeners();
     formKey.currentState.save();

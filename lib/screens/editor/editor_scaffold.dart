@@ -9,16 +9,17 @@ import 'editor_provider.dart';
 class EditorScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<EditorProvider>(
-      builder: (context, modal, _) {
-        return Scaffold(
-          appBar: EditorAppbar(),
-          body: ModalProgressHUD(
-            inAsyncCall: modal.isLoading,
-            child: EditorForm(),
-          ),
-        );
-      },
+    return Scaffold(
+      appBar: EditorAppbar(),
+      body: Consumer<EditorProvider>(
+        builder: (context, model, child) {
+          return ModalProgressHUD(
+            inAsyncCall: model.isLoading,
+            child: child,
+          );
+        },
+        child: EditorForm(),
+      ),
     );
   }
 }

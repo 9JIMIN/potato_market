@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
-import './products/products_appbar.dart';
+import './market/market_appbar.dart';
 import './community/community_appbar.dart';
 import './chatting/chatting_appbar.dart';
 import './myprofile/myprofile_appbar.dart';
 
-import './products/products_body.dart';
+import './market/market_body.dart';
 import './community/community_body.dart';
 import './chatting/chatting_body.dart';
 import './myprofile/myprofile_body.dart';
@@ -42,13 +42,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   List<Widget> _appbar = <Widget>[
-    ProductsAppbar(),
+    MarketAppbar(),
     CommunityAppbar(),
     ChattingAppbar(),
     MyProfileAppbar(),
   ];
   List<Widget> _body = <Widget>[
-    ProductsBody(),
+    MarketBody(),
     CommunityBody(),
     ChattingBody(),
     MyProfileBody(),
