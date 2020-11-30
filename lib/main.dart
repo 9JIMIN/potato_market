@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:potato_market/screens/market/market_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/login/login_screen.dart';
+// screens
+import './screens/auth/auth_screen.dart';
 import './screens/main_screen.dart';
-import './screens/editor/editor_provider.dart';
+import 'screens/market/market_model.dart';
+
+// models
+import './screens/auth/auth_model.dart';
+import './screens/product_editor/product_editor_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,11 +19,14 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<EditorProvider>(
-          create: (_) => EditorProvider(),
+        ChangeNotifierProvider(
+          create: (_) => AuthModel(),
         ),
-        ChangeNotifierProvider<MarketProvider>(
-          create: (_) => MarketProvider(),
+        ChangeNotifierProvider<ProductEditorModel>(
+          create: (_) => ProductEditorModel(),
+        ),
+        ChangeNotifierProvider<MarketModel>(
+          create: (_) => MarketModel(),
         ),
       ],
       child: App(),
@@ -37,7 +44,7 @@ class App extends StatelessWidget {
           if (snapshot.hasData) {
             return MainScreen();
           } else {
-            return LoginScreen();
+            return AuthScreen();
           }
         },
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ChattingAppbar extends StatelessWidget implements PreferredSizeWidget {
+class ChatAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(60);
   @override

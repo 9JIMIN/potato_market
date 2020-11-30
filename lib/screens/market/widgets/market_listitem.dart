@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 class ProductItem extends StatelessWidget {
   final title;
   final price;
-  final image;
+  final firstImage;
   final likeCount;
   final chatCount;
   ProductItem(
     this.title,
     this.price,
-    this.image,
+    this.firstImage,
     this.likeCount,
     this.chatCount,
   );
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.network('$image'),
+      leading: Image.network('$firstImage'),
       title: Text(title),
       subtitle: Text('$price'),
       trailing: Column(

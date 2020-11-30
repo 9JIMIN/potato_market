@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ChattingBody extends StatelessWidget {
+class ChatBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

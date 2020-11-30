@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:potato_market/screens/market/market_listview.dart';
+import 'package:potato_market/screens/market/widgets/market_listview.dart';
 
-class MarketBody extends StatelessWidget {
+class MarketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MarketListView();
