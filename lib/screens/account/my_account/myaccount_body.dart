@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MyProfileBody extends StatelessWidget {
+class MyAccountBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(

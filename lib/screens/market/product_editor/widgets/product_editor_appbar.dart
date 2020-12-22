@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:potato_market/screens/market/market_model.dart';
+import 'package:potato_market/screens/market/market/market_model.dart';
 import 'package:provider/provider.dart';
 
 import '../product_editor_model.dart';

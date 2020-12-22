@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,11 +13,14 @@ class MarketListView extends StatefulWidget {
 
 class _MarketListViewState extends State<MarketListView> {
   ScrollController _controller;
+  bool oldState = false;
+  bool newState = false;
   _scrollListener() async {
+    final model = context.read<MarketModel>();
     if (_controller.position.maxScrollExtent - _controller.position.pixels <
-        50) {
-      print('끝');
-      await context.read<MarketModel>().appendProducts();
+            100 &&
+        model.isAppendDone) {
+      await model.appendProducts();
     }
   }
 
@@ -24,18 +29,19 @@ class _MarketListViewState extends State<MarketListView> {
     super.initState();
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
-    print('Market Screen init');
+    log('Market Screen init');
   }
 
   @override
   void dispose() {
     _controller.removeListener(_scrollListener);
     super.dispose();
+    log('Market Screen dispose');
   }
 
   @override
   Widget build(BuildContext context) {
-    print('Market Screen Build');
+    log('Market Screen Build');
     final model = Provider.of<MarketModel>(context);
     return Builder(
       builder: (context) => model.list.isEmpty
@@ -49,6 +55,7 @@ class _MarketListViewState extends State<MarketListView> {
                 itemCount: model.list.length,
                 itemBuilder: (ctx, i) {
                   return ProductItem(
+                    i,
                     model.list[i].title,
                     model.list[i].price,
                     model.list[i].imageUrls[0],

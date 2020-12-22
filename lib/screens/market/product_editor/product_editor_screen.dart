@@ -9,8 +9,9 @@ import 'product_editor_model.dart';
 class ProductEditorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final isLoading =
-        context.select((ProductEditorModel model) => model.isLoading);
+    final isLoading = context.select(
+      (ProductEditorModel model) => model.isLoading,
+    );
     return Scaffold(
       appBar: ProductEditorAppbar(),
       body: ModalProgressHUD(

@@ -41,22 +41,6 @@ class AuthModel with ChangeNotifier {
     return null;
   }
 
-  Future<void> onSubmit() async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      if (_isLogin) {
-        await login();
-      } else {
-        await addUser();
-      }
-    } catch (e) {
-      print(e);
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
-
   void onChange() {
     _isLogin = !_isLogin;
     notifyListeners();
@@ -72,6 +56,22 @@ class AuthModel with ChangeNotifier {
 
   void onPasswordSaved(value) {
     _password = value;
+  }
+
+  Future<void> onSubmit() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      if (_isLogin) {
+        await login();
+      } else {
+        await addUser();
+      }
+    } catch (e) {
+      print(e);
+    }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> addUser() async {
