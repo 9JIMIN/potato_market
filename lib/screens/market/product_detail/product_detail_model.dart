@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../models/product.dart';
-import '../../models/profile.dart';
+import '../../../models/product.dart';
+import '../../../models/profile.dart';
 
 class ProductDetailModel with ChangeNotifier {
   Product _product;

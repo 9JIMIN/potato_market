@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:potato_market/providers/my_model.dart';
-import 'package:potato_market/screens/base/base_model.dart';
 import 'package:provider/provider.dart';
+
+import 'base_model.dart';
 
 class BaseScreen extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class _BaseScreenState extends State<BaseScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<MyModel>().fetchData();
+    // context.read<LocalModel>().fetchData();
   }
 
   @override

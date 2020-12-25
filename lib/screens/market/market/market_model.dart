@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../product_detail/product_detail_model.dart';
-import '../../product_detail/product_detail_screen.dart';
-import '../../product_editor/product_editor_screen.dart';
-import '../../category_setting/category_setting_screen.dart';
 import '../../../models/product.dart';
+import '../product_detail/product_detail_model.dart';
+import '../product_detail/product_detail_screen.dart';
+import '../product_editor/product_editor_screen.dart';
+import '../product_categories/category_setting_screen.dart';
 
 class MarketModel extends ChangeNotifier {
   MarketModel() {

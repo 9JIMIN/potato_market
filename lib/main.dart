@@ -1,52 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-// screens
-import './screens/auth/login/auth_screen.dart';
-import './screens/market/base/base_screen.dart';
-import 'screens/market/market/market_model.dart';
+import 'models/local.dart';
+import 'screens/auth/splash/splash_view.dart';
 
-// models
-import 'package:potato_market/providers/my_model.dart';
-import 'package:potato_market/screens/my_account/myaccount_model.dart';
-import 'package:potato_market/screens/product_detail/product_detail_model.dart';
-import 'package:potato_market/screens/community/community/community_model.dart';
-import './screens/auth/auth_model.dart';
-import './screens/product_editor/product_editor_model.dart';
-import 'screens/base/base_model.dart';
+// provider
+import 'providers/account_provider.dart';
+import 'providers/auth_provider.dart';
+import 'providers/chat_provider.dart';
+import 'providers/community_provider.dart';
+import 'providers/local_provider.dart';
+import 'providers/market_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  await Hive.initFlutter();
+  Hive.registerAdapter(LocalAdapter());
+  await Hive.openBox<Local>('local');
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => MyAccountModel(),
+          create: (_) => AccountProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => AuthModel(),
+          create: (_) => AuthProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => BaseModel(),
+          create: (_) => ChatProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => MyModel(),
-        ),
-        ChangeNotifierProvider<MarketModel>(
-          create: (_) => MarketModel(),
+          create: (_) => CommunityProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => ProductDetailModel(),
-        ),
-        ChangeNotifierProvider<ProductEditorModel>(
-          create: (_) => ProductEditorModel(),
+          create: (_) => LocalProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => CommunityModel(),
+          create: (_) => MarketProvider(),
         ),
       ],
       child: App(),
@@ -58,16 +54,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (_, snapshot) {
-          if (snapshot.hasData) {
-            return BaseScreen();
-          } else {
-            return AuthScreen();
-          }
-        },
-      ),
+      home: SplashView(),
     );
   }
 }
