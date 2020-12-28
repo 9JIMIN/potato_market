@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:potato_market/screens/auth/area/area_view.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,7 +22,8 @@ start
 
 area
 - List areaList, 
-- getMyCoords, searchByText(text), searchByGPS(), onAreaTileTap()
+- getPosition(), fetchMyCoords(), searchByText(text), searchByGPS(), onAreaTileTap()
+- 좌표의 동네를 가져옴. 그리고 
 
 login
 - String phoneNumber, int certNumber, String name, String email
@@ -38,14 +41,13 @@ base
 
 class AuthProvider with ChangeNotifier {
   AuthProvider() {
+    fetchMyCoords();
     log('AuthProvider - init');
   }
 
-  // properties
+  // ######## splash, start
   final splashImage = 'assets/splash_image.jpg';
-  var myCoords;
 
-  // methods
   Future<Widget> afterSplash(BuildContext context) async {
     log('AuthProvider - afterSplash()');
     await Future.delayed(Duration(seconds: 1));
@@ -65,35 +67,50 @@ class AuthProvider with ChangeNotifier {
     );
   }
 
-  Future<Position> determinePosition() async {
-    bool serviceEnabled;
+  // ######## area
+  LatLng myCoords;
+  var inputArea;
+  var areaList;
+  Completer<GoogleMapController> _controller = Completer();
+
+  Future<void> fetchMyCoords() async {
     LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
     permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permantly denied, we cannot request permissions.');
-    }
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse &&
-          permission != LocationPermission.always) {
-        return Future.error(
-            'Location permissions are denied (actual value: $permission).');
-      }
     }
 
-    return await Geolocator.getCurrentPosition();
+    var myPosition = await Geolocator.getCurrentPosition();
+    myCoords = LatLng(myPosition.latitude, myPosition.longitude);
+    log('fetchMyCoords() ' + myCoords.toString());
   }
 
-  Future<void> fetchMyCoords() async {
-    myCoords = await determinePosition();
-    log(myCoords.toString());
+  GoogleMap googleMap() {
+    return GoogleMap(
+      mapType: MapType.terrain,
+      initialCameraPosition: CameraPosition(target: myCoords, zoom: 15),
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+    );
+  }
+
+  Future<void> centerMap() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: myCoords,
+          zoom: 15,
+        ),
+      ),
+    );
+  }
+
+  Future<void> fetchAreaListByInputText() async {}
+
+  void onAreaTap() {
+    // Local 데이터 업데이트
   }
 }

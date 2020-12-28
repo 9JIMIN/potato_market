@@ -21,6 +21,7 @@ dependencies:
   hive:
   hive_flutter:
   geolocator:
+  google_maps_flutter:
 
 dev_dependencies:
   flutter_test:

@@ -11,6 +11,8 @@
    <application
         android:label="potato_market"
         android:icon="@mipmap/ic_launcher">
+      <meta-data android:name="com.google.android.geo.API_KEY"
+          android:value="AIzaSyBfNLKLO73gqD-pxg22Bngaddo3RlVU794"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

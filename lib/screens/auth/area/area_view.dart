@@ -3,23 +3,34 @@ import 'package:provider/provider.dart';
 
 import '../../../providers/auth_provider.dart';
 
-class AreaView extends StatelessWidget {
+class AreaView extends StatefulWidget {
+  @override
+  State<AreaView> createState() => AreaViewState();
+}
+
+class AreaViewState extends State<AreaView> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('지역설정'),
+        title: Text('Area'),
       ),
       body: Column(
         children: [
-          RaisedButton(
-            child: Text('내 좌표'),
-            onPressed: () async {
-              await model.fetchMyCoords();
-            },
+          Flexible(
+            flex: 8,
+            child: model.googleMap(),
+          ),
+          Flexible(
+            flex: 2,
+            child: Text('1'),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.gps_fixed),
+        onPressed: model.centerMap,
       ),
     );
   }
