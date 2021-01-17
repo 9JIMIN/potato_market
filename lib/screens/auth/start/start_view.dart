@@ -14,7 +14,7 @@ class StartView extends StatelessWidget {
         child: RaisedButton(
           child: Text('시작!'),
           onPressed: () {
-            model.toArea(context);
+            model.toPlace(context);
           },
         ),
       ),

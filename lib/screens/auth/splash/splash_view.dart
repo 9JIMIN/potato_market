@@ -12,10 +12,14 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<AuthProvider>(context);
+    final model = Provider.of<AuthProvider>(context, listen: false);
     return SplashScreen(
       navigateAfterFuture: model.afterSplash(context),
-      image: Image.asset(model.splashImage),
+      image: Image.asset(
+        model.splashImage,
+        fit: BoxFit.fill,
+      ),
+      useLoader: false,
     );
   }
 }
