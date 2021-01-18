@@ -10,4 +10,11 @@ class Place {
     this.address,
     this.userCount,
   });
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'point': point,
+        'address': address,
+        'userCount': userCount,
+      };
 }

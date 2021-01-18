@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:potato_market/screens/auth/new_place_name/new_place_name_view.dart';
+import 'package:potato_market/screens/auth/set_place_range/set_place_range_view.dart';
 import 'package:potato_market/secrets.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -95,7 +99,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   // NewPlaceTarget
-  LatLng newPlaceCoords;
+  LatLng _newPlaceCoords;
   bool _isRegisterButtonVisible = true;
   GoogleMapController _newPlaceMapController;
   var _newPlaceMarkers = Set<Marker>();
@@ -123,7 +127,7 @@ class AuthProvider with ChangeNotifier {
     var mediaSize = MediaQuery.of(context).size;
     var _centerHeight = (mediaSize.height * pixelRatio / 2).round();
     var _centerWidth = (mediaSize.width * pixelRatio / 2).round();
-    newPlaceCoords = await newPlaceMapController.getLatLng(
+    _newPlaceCoords = await newPlaceMapController.getLatLng(
       ScreenCoordinate(
         x: _centerWidth,
         y: _centerHeight,
@@ -133,7 +137,7 @@ class AuthProvider with ChangeNotifier {
     _newPlaceMarkers.add(
       Marker(
         markerId: MarkerId("1"),
-        position: newPlaceCoords,
+        position: _newPlaceCoords,
       ),
     );
     notifyListeners();
@@ -150,28 +154,60 @@ class AuthProvider with ChangeNotifier {
   }
 
   // NewPlaceName
-  String _newPlaceName;
-  String _newPlaceAddress;
+  var _isNewPlaceNameLoading = false;
+  bool get isNewPlaceNameLoading => _isNewPlaceNameLoading;
 
-  String get newPlaceAddress => _newPlaceAddress;
-
-  Future<void> _changeToAddress(LatLng point) async {
-    // HTTP 요청 보내기
-    // JSON 에서 주소 정보 가져오기
+  Future<String> _coordsToAddress(LatLng point) async {
     var url = 'https://maps.googleapis.com/maps/api/geocode/json';
-    var lat = newPlaceCoords.latitude;
-    var lng = newPlaceCoords.longitude;
-    var requestUrl = '$url?latlng=$lat,$lng&key=${Secrets.googleAPI}';
+    var lat = _newPlaceCoords.latitude;
+    var lng = _newPlaceCoords.longitude;
+    var lang = 'ko'; // 나중에 옵션으로 바꾸기
+    var requestUrl =
+        '$url?latlng=$lat,$lng&key=${Secrets.googleAPI}&language=$lang';
 
     var response = await http.get(requestUrl);
-    log(response.toString());
+    Map<String, dynamic> res = jsonDecode(response.body);
+    return res['results'][0]['formatted_address'].toString();
   }
 
-  Future<void> _createNewPlace(Place newPlace) {}
-
-  void onSave(String string) async {
-    await _changeToAddress(newPlaceCoords);
+  GeoFirePoint _coordsToGeoPoint(LatLng point) {
+    final geo = Geoflutterfire();
+    return geo.point(
+      latitude: point.latitude,
+      longitude: point.longitude,
+    );
   }
 
-  void _toSetPlaceRange(BuildContext context) {}
+  Future<void> _createNewPlace(Place newPlace) async {
+    await FirebaseFirestore.instance
+        .collection('places')
+        .add(newPlace.toJson());
+  }
+
+  void _toSetPlaceRange(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SetPlaceRange(),
+      ),
+    );
+  }
+
+  Future<void> onSave(String newPlaceName, BuildContext context) async {
+    _isNewPlaceNameLoading = true;
+    notifyListeners();
+
+    var newPlaceAddress = await _coordsToAddress(_newPlaceCoords);
+    var newPlacePosition = _coordsToGeoPoint(_newPlaceCoords).data;
+    var newPlace = Place(
+      address: newPlaceAddress,
+      name: newPlaceName,
+      point: newPlacePosition,
+      userCount: 0,
+    );
+    await _createNewPlace(newPlace);
+    _isNewPlaceNameLoading = false;
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    _toSetPlaceRange(context);
+  }
 }
