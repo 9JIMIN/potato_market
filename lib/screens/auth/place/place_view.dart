@@ -25,19 +25,39 @@ class PlaceViewState extends State<PlaceView> {
           )
         ],
       ),
-      body: GoogleMap(
-        markers: model.placeMarkers,
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: model.myGPSCoords,
-          zoom: model.initalCameraZoom,
-        ),
-        onMapCreated: model.setMapController,
-        myLocationEnabled: true,
-        zoomControlsEnabled: false,
-        onTap: (_) {
-          model.hidePlaceWidget();
-        },
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          GoogleMap(
+            markers: model.placeMarkers,
+            mapType: MapType.normal,
+            initialCameraPosition: CameraPosition(
+              target: model.myGPSCoords,
+              zoom: model.initalCameraZoom,
+            ),
+            onMapCreated: model.setMapController,
+            myLocationEnabled: true,
+            zoomControlsEnabled: false,
+            onTap: (_) {
+              model.hidePlaceWidget();
+            },
+          ),
+          if (model.isPlaceWidgetVisible)
+            Positioned(
+              child: ListTile(
+                tileColor: Colors.amber,
+                title: Text(model.selectedPlace.name),
+                subtitle: Text(model.selectedPlace.address +
+                    ' | 사용자 수: ' +
+                    model.selectedPlace.userCount.toString()),
+                trailing: RaisedButton(
+                  onPressed: () {
+                    model.toSetPlaceRange(context);
+                  },
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

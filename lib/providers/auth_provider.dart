@@ -23,9 +23,9 @@ import '../screens/auth/new_place_target/new_place_target_view.dart';
 import '../secrets.dart';
 
 class AuthProvider with ChangeNotifier {
-  AuthProvider() {
-    fetchGPSCoords();
-  }
+  // 공용
+  final firestore = FirebaseFirestore.instance;
+  final geo = Geoflutterfire();
 
   // Splash
   final _splashImage = 'assets/splash_image.jpg';
@@ -33,6 +33,9 @@ class AuthProvider with ChangeNotifier {
 
   Future<Widget> afterSplash(BuildContext context) async {
     await Future.delayed(Duration(seconds: 1));
+    await fetchGPSCoords();
+    log(_myGPSCoords.latitude.toString());
+    await updateMarkers();
     if (context.read<LocalProvider>().local.area == null) {
       return StartView();
     } else {
@@ -66,6 +69,38 @@ class AuthProvider with ChangeNotifier {
   bool get isPlaceWidgetVisible => _isPlaceWidgetVisible;
   double get initalCameraZoom => _initalCameraZoom;
 
+  Future<void> updateMarkers() async {
+    //
+    var collectionRef = firestore.collection('places');
+
+    var placeStream = geo.collection(collectionRef: collectionRef).within(
+        center: geo.point(
+          latitude: _myGPSCoords.latitude,
+          longitude: _myGPSCoords.longitude,
+        ),
+        radius: 50,
+        field: 'point');
+
+    placeStream.listen((List<DocumentSnapshot> documentList) {
+      documentList.forEach((document) {
+        final Place place = Place.fromJson(document.data());
+        final GeoPoint point = place.point;
+        _placeMarkers.add(
+          Marker(
+            markerId: MarkerId(DateTime.now().toString()),
+            position: LatLng(point.latitude, point.longitude),
+            icon: BitmapDescriptor.defaultMarker,
+            onTap: () {
+              _selectedPlace = place;
+              showPlaceWidget();
+            },
+          ),
+        );
+        notifyListeners();
+      });
+    });
+  }
+
   Future<void> fetchGPSCoords() async {
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
@@ -80,6 +115,11 @@ class AuthProvider with ChangeNotifier {
 
   void setMapController(GoogleMapController controller) {
     _mapController = controller;
+  }
+
+  void showPlaceWidget() {
+    _isPlaceWidgetVisible = true;
+    notifyListeners();
   }
 
   void hidePlaceWidget() {
@@ -171,7 +211,6 @@ class AuthProvider with ChangeNotifier {
   }
 
   GeoFirePoint _coordsToGeoPoint(LatLng point) {
-    final geo = Geoflutterfire();
     return geo.point(
       latitude: point.latitude,
       longitude: point.longitude,
@@ -179,12 +218,10 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> _createNewPlace(Place newPlace) async {
-    await FirebaseFirestore.instance
-        .collection('places')
-        .add(newPlace.toJson());
+    await firestore.collection('places').add(newPlace.toJson());
   }
 
-  void _toSetPlaceRange(BuildContext context) {
+  void toSetPlaceRange(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SetPlaceRange(),
@@ -208,6 +245,12 @@ class AuthProvider with ChangeNotifier {
     _isNewPlaceNameLoading = false;
     Navigator.of(context).pop();
     Navigator.of(context).pop();
-    _toSetPlaceRange(context);
+    toSetPlaceRange(context);
   }
+
+  // SetPlaceRange
+  int placeRange;
+  int placeCount;
+  int userCount;
+  int tradeCount;
 }
