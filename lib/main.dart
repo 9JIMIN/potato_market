@@ -5,15 +5,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'models/local.dart';
-import 'screens/auth/splash/splash_view.dart';
+import 'screens/start/splash/splash_view.dart';
 
 // provider
-import 'providers/account_provider.dart';
-import 'providers/auth_provider.dart';
-import 'providers/chat_provider.dart';
-import 'providers/community_provider.dart';
 import 'providers/local_provider.dart';
-import 'providers/market_provider.dart';
+import 'screens/start/splash/splash_model.dart';
+import 'screens/start/set_area/set_area_model.dart';
+import 'screens/start/start/start_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,22 +25,16 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => AccountProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ChatProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => CommunityProvider(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => LocalProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => MarketProvider(),
+          create: (_) => SplashModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => StartModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SetAreaModel(),
         ),
       ],
       child: App(),

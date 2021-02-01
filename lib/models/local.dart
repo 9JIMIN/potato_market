@@ -15,7 +15,7 @@ class Local {
   @HiveField(4)
   String phoneNumber;
   @HiveField(5)
-  Map<String, dynamic> area; // {'area1': '가좌동', 'range1': 1, 'area2': ...}
+  Map<String, dynamic> place; // {'area1': '가좌동', 'range1': 1, 'area2': ...}
   @HiveField(6)
   Map<String, bool> productCategories;
   @HiveField(7)
@@ -27,7 +27,7 @@ class Local {
     this.email,
     this.imageUrl,
     this.phoneNumber,
-    this.area,
+    this.place,
     this.productCategories,
     this.postCategories,
   });
@@ -39,7 +39,7 @@ class Local {
       email: box.get('email'),
       imageUrl: box.get('imageUrl'),
       phoneNumber: box.get('phoneNumber'),
-      area: box.get('area'),
+      place: box.get('place'),
       productCategories: box.get('productCategories'),
       postCategories: box.get('postCategories'),
     );

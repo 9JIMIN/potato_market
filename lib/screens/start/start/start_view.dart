@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:potato_market/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'start_model.dart';
 
 class StartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var model = Provider.of<AuthProvider>(context, listen: false);
+    var model = Provider.of<StartModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Welcome to 감자마켓'),

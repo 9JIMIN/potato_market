@@ -3,12 +3,12 @@ import 'package:provider/provider.dart';
 
 import 'base_model.dart';
 
-class BaseScreen extends StatefulWidget {
+class BaseView extends StatefulWidget {
   @override
-  _BaseScreenState createState() => _BaseScreenState();
+  _BaseViewState createState() => _BaseViewState();
 }
 
-class _BaseScreenState extends State<BaseScreen> {
+class _BaseViewState extends State<BaseView> {
   @override
   void initState() {
     super.initState();
