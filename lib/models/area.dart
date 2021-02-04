@@ -1,11 +1,13 @@
 class Area {
-  final position;
+  final latitude;
+  final longitude;
   final radius;
   final name;
   final active;
 
   Area({
-    this.position,
+    this.latitude,
+    this.longitude,
     this.radius,
     this.name,
     this.active,

@@ -18,17 +18,19 @@ class SetAreaRangeView extends StatelessWidget {
         // - 내 위치 가져오기
         future: model.fetchMyPosition(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          log('build');
           if (snapshot.connectionState == ConnectionState.done) {
             final model = Provider.of<SetAreaModel>(context);
             return Stack(
               alignment: Alignment.center,
               children: [
+                // 1. 구글 맵
                 GoogleMap(
+                  circles: model.circle,
                   markers: model.markers,
                   mapType: MapType.normal,
                   onMapCreated: (GoogleMapController controller) {
                     model.setMapController(controller); // 컨트롤러 부여
-                    model.fetchMarkers(); // 마커 가져오기
                   },
                   initialCameraPosition: CameraPosition(
                     target: model.myPosition,
@@ -37,55 +39,70 @@ class SetAreaRangeView extends StatelessWidget {
                   myLocationEnabled: true,
                   zoomControlsEnabled: false,
                   tiltGesturesEnabled: false,
-                  onCameraMoveStarted: model.onCameraMoveStarted, // 위젯 숨기기
-                  onCameraIdle: model.onCameraIdle, // 위젯 보이기, 카운트 업데이트 하기
+                  onCameraMoveStarted: model.deleteCircle,
+                  onCameraIdle: () async {
+                    await model.getAreaCenter(context); // 위젯 보이기, 카운트 업데이트 하기
+                    model.createCircle();
+                    await model.fetchCount();
+                  },
                 ),
+
+                // 2. 지도 중심 원
                 Center(
-                  child: Icon(Icons.ac_unit),
-                ),
-                Positioned(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Stack(
                     children: [
-                      Visibility(
-                        maintainState: true,
-                        maintainAnimation: true,
-                        maintainSize: true,
-                        visible: model.isCameraIdle,
-                        child: RaisedButton(
-                          child: Text('구역 등록하기'),
-                          onPressed: () {
-                            // 중심좌표, 반지름 받아서 변수 업데이트
-                            // reverse geocoding으로 주소가져오기
-                            // 이름받기 페이지로 이동
-                          },
-                        ),
-                      ),
-                      Icon(
-                        // 커스텀 마커로 바꾸기
-                        Icons.pin_drop,
-                        size: 50,
-                      ),
+                      Icon(Icons.add_circle_outline),
+                      // TODO: 항상 보이는 원
                     ],
                   ),
                 ),
-                if (model.isCameraIdle)
-                  Positioned(
-                    bottom: 0,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
+
+                // 3. 아래 구역 정보
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('포함된 거래위치 수 : ${model.pointCount}'),
-                            Text('전일 거래량 : ${model.tradeCount}'),
-                            Text('매물 수 : ${model.productCount}'),
+                            Slider(
+                              value: model.areaRadius,
+                              onChanged: (double radius) async {
+                                model.changeRadius(radius);
+                                await model.fetchCount();
+                              },
+                              min: 1000,
+                              max: 20000,
+                              divisions: 10,
+                              label: model.areaRadius.toString(),
+                            ),
+                            Text('반지름: ${model.areaRadius}'),
+                            Text(model.isRangeLoading
+                                ? '전일 거래량: ...'
+                                : '전일 거래량: ${model.pointCount}'),
+                            Text(model.isRangeLoading
+                                ? '현재 매물수: ...'
+                                : '현재 매물수: ${model.productCount}'),
                           ],
                         ),
-                      ),
+                        RaisedButton(
+                          onPressed: () {
+                            model.toSetAreaName(context);
+                          },
+                          child: Text('범위 등록하기'),
+                        ),
+                      ],
                     ),
                   ),
+                ),
               ],
             );
           }

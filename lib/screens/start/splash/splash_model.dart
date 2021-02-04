@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -12,10 +14,11 @@ class SplashModel with ChangeNotifier {
 
   Future<Widget> afterSplash(BuildContext context) async {
     await Future.delayed(Duration(seconds: 1));
-    if (context.read<LocalProvider>().local.place == null) {
+    if (context.read<LocalProvider>().areaBox.isEmpty) {
       return StartView();
     } else {
-      return BaseView();
+      return StartView();
+      // return BaseView();
     }
   }
 }

@@ -14,6 +14,7 @@ class SplashView extends StatelessWidget {
         model.splashImage,
         fit: BoxFit.fill,
       ),
+      photoSize: 100,
       useLoader: false,
     );
   }

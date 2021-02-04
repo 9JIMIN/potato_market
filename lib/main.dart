@@ -5,6 +5,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'models/local.dart';
+import 'screens/market/market/market_model.dart';
+import 'screens/start/base/base_model.dart';
 import 'screens/start/splash/splash_view.dart';
 
 // provider
@@ -18,8 +20,7 @@ void main() async {
   await Firebase.initializeApp();
 
   await Hive.initFlutter();
-  Hive.registerAdapter(LocalAdapter());
-  await Hive.openBox<Local>('local');
+  await Hive.openBox('area');
 
   runApp(
     MultiProvider(
@@ -35,6 +36,12 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => SetAreaModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BaseModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MarketModel(),
         ),
       ],
       child: App(),
