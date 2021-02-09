@@ -1,72 +1,128 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:potato_market/models/local.dart';
-import 'package:potato_market/providers/local_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../start/set_area/set_area_name_view.dart';
+import '../../start/base/base_view.dart';
+import '../../../providers/local_model.dart';
 import '../../../models/area.dart';
 import '../../../secrets.dart';
-import '../../start/base/base_view.dart';
 
 class SetAreaModel with ChangeNotifier {
   LatLng _myPosition;
-  LatLng get myPosition => _myPosition;
 
   var _initalZoom = 12.0;
-  double get initalZoom => _initalZoom;
 
-  GoogleMapController mapController;
-
-  LatLng _areaCenter;
-  LatLng get areaCenter => _areaCenter;
-
-  double _areaRadius = 5000;
-  double get areaRadius => _areaRadius;
-
-  String _areaName;
-  String get areaName => _areaName;
-
-  int _pointCount;
-  int get pointCount => _pointCount;
-
-  int _productCount;
-  int get productCount => _productCount;
-
-  int _tradeCount;
-  int get tradeCount => _tradeCount;
+  GoogleMapController _mapController;
 
   var _markers = Set<Marker>();
-  Set<Marker> get markers => _markers;
 
   var _circles = Set<Circle>();
-  Set<Circle> get circle => _circles;
+
+  LatLng _areaCenter;
+
+  double _areaRadius = 5000;
+
+  String _areaName;
+
+  int _pointCount;
+
+  int _productCount;
+
+  int _tradeCount;
 
   var _isRangeLoading = false;
-  bool get isRangeLoading => _isRangeLoading;
-
-  var _isNameLoading = false;
-  bool get isNameLoading => _isNameLoading;
 
   String _fullAddress;
+
+  Area _newArea;
+
+  LatLng get myPosition => _myPosition;
+  double get initalZoom => _initalZoom;
+  set setMapController(GoogleMapController controller) =>
+      _mapController = controller;
+  Set<Marker> get markers => _markers;
+  Set<Circle> get circle => _circles;
+  LatLng get areaCenter => _areaCenter;
+  double get areaRadius => _areaRadius;
+  String get areaName => _areaName;
+  int get pointCount => _pointCount;
+  int get productCount => _productCount;
+  int get tradeCount => _tradeCount;
+  bool get isRangeLoading => _isRangeLoading;
   String get fullAddress => _fullAddress;
 
   // **********
   // **** 메서드
   // **********
 
-  Future<void> fetchMyPosition() async {
+  // 1. FutureBuilder
+  Future<void> onRangeFutureBuild() async {
+    await _updateMyPosition();
+  }
+
+  Future<void> onNameFutureBuild() async {
+    await _updateAreaName();
+  }
+
+  // 2. 카메라 움직일 때
+  void onCameraMoveStarted() async {
+    _deleteCircle();
+
+    notifyListeners();
+  }
+
+  // 3. 카메라 멈출 때
+  Future<void> onCameraIdle(BuildContext context) async {
+    _isRangeLoading = true;
+    notifyListeners();
+
+    await _updateAreaCenter(context);
+    _createCircle();
+    notifyListeners();
+
+    await _updateCount();
+    _isRangeLoading = false;
+    notifyListeners();
+  }
+
+  // 4. 슬라이더 움직이면
+  Future<void> onSliderMove(double radius) async {
+    _areaRadius = radius;
+    _isRangeLoading = true;
+    _createCircle();
+    notifyListeners();
+
+    await _updateCount();
+
+    _isRangeLoading = false;
+    notifyListeners();
+  }
+
+  // 5. 다음버튼 클릭
+  void onNextPressed(BuildContext context) {
+    _toSetAreaName(context);
+  }
+
+  // 6. 저장버튼 클릭
+  Future<void> onSavePressed(BuildContext context, String name) async {
+    _areaName = name;
+    _updateArea();
+    context.read<LocalModel>().updateArea(_newArea);
+
+    _toBase(context);
+  }
+
+  Future<void> _updateMyPosition() async {
     LocationPermission permission;
     permission = await Geolocator.checkPermission();
+    log(permission.toString());
 
     if (permission == LocationPermission.denied) {
       await Geolocator.requestPermission();
@@ -76,25 +132,20 @@ class SetAreaModel with ChangeNotifier {
     _myPosition = LatLng(myPosition.latitude, myPosition.longitude);
   }
 
-  Future<void> fetchCount() async {
-    _isRangeLoading = true;
-    notifyListeners();
-    // Function 요청
+  Future<void> _updateCount() async {
     await Future.delayed(Duration(milliseconds: 500));
 
     _pointCount = DateTime.now().microsecond.round();
     _productCount = DateTime.now().millisecond.round();
     _tradeCount = DateTime.now().microsecond.round();
-    _isRangeLoading = false;
-    notifyListeners();
   }
 
-  Future<void> getAreaCenter(BuildContext context) async {
+  Future<void> _updateAreaCenter(BuildContext context) async {
     var pixelRatio = MediaQuery.of(context).devicePixelRatio;
     var mediaSize = MediaQuery.of(context).size;
     var appbarHeight = Scaffold.of(context).appBarMaxHeight;
 
-    _areaCenter = await mapController.getLatLng(
+    _areaCenter = await _mapController.getLatLng(
       ScreenCoordinate(
         x: (mediaSize.width * pixelRatio / 2).round(),
         y: ((mediaSize.height - appbarHeight) * pixelRatio / 2).round(),
@@ -102,7 +153,7 @@ class SetAreaModel with ChangeNotifier {
     );
   }
 
-  Future<void> fetchAddress() async {
+  Future<void> _updateAreaName() async {
     var url = 'https://maps.googleapis.com/maps/api/geocode/json';
     var lat = _areaCenter.latitude;
     var lng = _areaCenter.longitude;
@@ -115,15 +166,22 @@ class SetAreaModel with ChangeNotifier {
     _areaName = res['address_components'][1]['short_name'];
   }
 
-  void deleteCircle() {
-    _circles = Set<Circle>();
-    _markers = Set<Marker>();
-    notifyListeners();
+  void _updateArea() {
+    _newArea = Area(
+      latitude: _areaCenter.latitude,
+      longitude: _areaCenter.longitude,
+      radius: _areaRadius,
+      name: _areaName,
+      active: true,
+    );
   }
 
-  void createCircle() {
+  void _deleteCircle() {
     _circles = Set<Circle>();
-    _markers = Set<Marker>();
+  }
+
+  void _createCircle() {
+    _circles = Set<Circle>();
     _circles.add(
       Circle(
         circleId: CircleId('1'),
@@ -132,68 +190,16 @@ class SetAreaModel with ChangeNotifier {
         fillColor: Colors.black45,
       ),
     );
-    _markers.add(
-      Marker(
-        markerId: MarkerId('1'),
-        position: _areaCenter,
-        icon: BitmapDescriptor.defaultMarker,
-      ),
-    );
-    notifyListeners();
   }
 
-  void changeRadius(double radius) {
-    _areaRadius = radius;
-    createCircle();
-    notifyListeners();
-  }
-
-  Future<void> onSaveButtonPressed(String name, BuildContext context) async {
-    _areaName = name;
-    _isNameLoading = true;
-    notifyListeners();
-
-    var area = Area(
-      latitude: _areaCenter.latitude,
-      longitude: _areaCenter.longitude,
-      radius: _areaRadius,
-      name: _areaName,
-      active: true,
-    );
-    context.read<LocalProvider>().updateArea(area);
-    await saveAreaCloud(area);
-
-    _isNameLoading = false;
-    toBase(context);
-  }
-
-  Future<void> saveAreaCloud(Area area) async {
-    final geo = Geoflutterfire();
-
-    GeoFirePoint point = geo.point(
-      latitude: _areaCenter.latitude,
-      longitude: _areaCenter.longitude,
-    );
-
-    await FirebaseFirestore.instance.collection('area').add({
-      'name': _areaName,
-      'position': point.data,
-      'radius': _areaRadius,
-      'active': true,
-    });
-  } // 클라우드 유저 subcollection으로 저장
-
-  void setMapController(GoogleMapController controller) {
-    mapController = controller;
-  }
-
-  void toSetAreaName(BuildContext context) {
+  void _toSetAreaName(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => SetAreaNameView()),
     );
   }
 
-  void toBase(BuildContext context) {
+  void _toBase(BuildContext context) {
+    Navigator.of(context).pop();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => BaseView()),
     );

@@ -15,22 +15,20 @@ class SetAreaRangeView extends StatelessWidget {
         title: Text('범위 정하기'),
       ),
       body: FutureBuilder(
-        // - 내 위치 가져오기
-        future: model.fetchMyPosition(),
+        // 1. Future
+        future: model.onRangeFutureBuild(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          log('build');
           if (snapshot.connectionState == ConnectionState.done) {
             final model = Provider.of<SetAreaModel>(context);
             return Stack(
               alignment: Alignment.center,
               children: [
-                // 1. 구글 맵
                 GoogleMap(
                   circles: model.circle,
                   markers: model.markers,
                   mapType: MapType.normal,
                   onMapCreated: (GoogleMapController controller) {
-                    model.setMapController(controller); // 컨트롤러 부여
+                    model.setMapController = controller; // 컨트롤러 부여
                   },
                   initialCameraPosition: CameraPosition(
                     target: model.myPosition,
@@ -39,25 +37,19 @@ class SetAreaRangeView extends StatelessWidget {
                   myLocationEnabled: true,
                   zoomControlsEnabled: false,
                   tiltGesturesEnabled: false,
-                  onCameraMoveStarted: model.deleteCircle,
+                  onCameraMoveStarted: model.onCameraMoveStarted, // 2. 카메라 움직일때
                   onCameraIdle: () async {
-                    await model.getAreaCenter(context); // 위젯 보이기, 카운트 업데이트 하기
-                    model.createCircle();
-                    await model.fetchCount();
+                    // 3. 카메라 멈출 때
+                    model.onCameraIdle(context);
                   },
                 ),
-
-                // 2. 지도 중심 원
                 Center(
                   child: Stack(
                     children: [
                       Icon(Icons.add_circle_outline),
-                      // TODO: 항상 보이는 원
                     ],
                   ),
                 ),
-
-                // 3. 아래 구역 정보
                 Positioned(
                   bottom: 0,
                   child: Container(
@@ -75,10 +67,7 @@ class SetAreaRangeView extends StatelessWidget {
                           children: [
                             Slider(
                               value: model.areaRadius,
-                              onChanged: (double radius) async {
-                                model.changeRadius(radius);
-                                await model.fetchCount();
-                              },
+                              onChanged: model.onSliderMove,
                               min: 1000,
                               max: 20000,
                               divisions: 10,
@@ -95,7 +84,8 @@ class SetAreaRangeView extends StatelessWidget {
                         ),
                         RaisedButton(
                           onPressed: () {
-                            model.toSetAreaName(context);
+                            // 5. 저장버튼 누르면
+                            model.onNextPressed(context);
                           },
                           child: Text('범위 등록하기'),
                         ),

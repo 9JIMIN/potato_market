@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import '../../market/market/widgets/market_appbar.dart';
 import '../../market/market/market_screen.dart';
@@ -18,8 +19,40 @@ import '../../chat/chat/chat_body.dart';
 import '../../account/my_account/myaccount_body.dart';
 import '../../account/my_account/widgets/myaccount_appbar.dart';
 
+import '../../../providers/local_model.dart';
+
 class BaseModel with ChangeNotifier {
   int _selectedIndex = 0;
+
+  List<Widget> _bodies = <Widget>[
+    MarketScreen(),
+    CommunityBody(),
+    ChatBody(),
+    MyAccountBody(),
+  ];
+
+  List<BottomNavigationBarItem> _bottomItems = <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+      icon: Icon(Icons.list_alt),
+      label: '제품',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.list_alt),
+      label: '커뮤니티',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.chat),
+      label: '채팅',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.chat),
+      label: '프로필',
+    ),
+  ];
+
+  int get selectedIndex => _selectedIndex;
+  List<Widget> get bodies => _bodies;
+  List<BottomNavigationBarItem> get bottomItems => _bottomItems;
 
   Widget appbar() {
     switch (_selectedIndex) {
@@ -45,15 +78,8 @@ class BaseModel with ChangeNotifier {
     }
   }
 
-  List<Widget> _bodies = <Widget>[
-    MarketScreen(),
-    CommunityBody(),
-    ChatBody(),
-    MyAccountBody(),
-  ];
-
-  int get selectedIndex => _selectedIndex;
-  List<Widget> get bodies => _bodies;
+  // ******* Methods **********
+  // **************************
 
   // FloatingActionButton tap
   void onMarketFloatPressed(BuildContext context) {

@@ -1,28 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profile {
+  final uid;
   final name;
-  final email;
+  final phoneNumber;
   final imageUrl;
-  final categories;
-  final sellCount;
 
   Profile({
+    this.uid,
     this.name,
-    this.email,
+    this.phoneNumber,
     this.imageUrl,
-    this.categories,
-    this.sellCount,
   });
 
   static Profile fromQuery(DocumentSnapshot query) {
     final doc = query.data();
     return Profile(
+      uid: doc['uid'],
       name: doc['name'],
-      email: doc['email'],
+      phoneNumber: doc['phoneNumber'],
       imageUrl: doc['imageUrl'],
-      categories: doc['categories'],
-      sellCount: doc['sellCount'],
     );
   }
 }

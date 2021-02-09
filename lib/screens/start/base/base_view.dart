@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:potato_market/providers/local_model.dart';
+import 'package:potato_market/screens/start/login/login_view.dart';
 import 'package:provider/provider.dart';
 
 import 'base_model.dart';
@@ -12,7 +14,36 @@ class _BaseViewState extends State<BaseView> {
   @override
   void initState() {
     super.initState();
-    // context.read<LocalModel>().fetchData();
+    var isLogin = context.read<LocalModel>().profile['uid'] != null;
+    if (!isLogin) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('로그인 하시겠습니까?'),
+            content: Text('로그인 없이도 이용은 가능합니다.'),
+            actions: [
+              FlatButton(
+                child: Text('나가기'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              RaisedButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => LoginView(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -25,24 +56,7 @@ class _BaseViewState extends State<BaseView> {
         index: model.selectedIndex,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: '제품',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: '커뮤니티',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: '채팅',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: '프로필',
-          ),
-        ],
+        items: model.bottomItems,
         onTap: model.onBottomTap,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.amber,

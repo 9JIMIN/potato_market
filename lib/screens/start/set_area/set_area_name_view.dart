@@ -21,7 +21,7 @@ class SetAreaNameView extends StatelessWidget {
               children: [
                 Text('구역의 이름을 적어주세요.'),
                 FutureBuilder(
-                  future: model.fetchAddress(),
+                  future: model.onNameFutureBuild(),
                   builder: (_, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return Column(
@@ -31,7 +31,7 @@ class SetAreaNameView extends StatelessWidget {
                               decoration: InputDecoration(),
                               initialValue: model.areaName,
                               onSaved: (String name) async {
-                                await model.onSaveButtonPressed(name, context);
+                                await model.onSavePressed(context, name);
                               }),
                           Text('중심 주소: ${model.fullAddress}'),
                           Text('반지름 크기: ${model.areaRadius / 1000} km'),
@@ -44,7 +44,7 @@ class SetAreaNameView extends StatelessWidget {
                   },
                 ),
                 RaisedButton(
-                  child: Text(model.isNameLoading ? '...' : '등록하기'),
+                  child: Text('등록하기'),
                   onPressed: () {
                     formKey.currentState.save();
                   },

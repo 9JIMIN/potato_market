@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import '../start/start_view.dart';
 import '../base/base_view.dart';
 
-import '../../../providers/local_provider.dart';
+import '../../../providers/local_model.dart';
 
 class SplashModel with ChangeNotifier {
   final _splashImage = 'assets/splash_image.jpg';
@@ -14,11 +12,10 @@ class SplashModel with ChangeNotifier {
 
   Future<Widget> afterSplash(BuildContext context) async {
     await Future.delayed(Duration(seconds: 1));
-    if (context.read<LocalProvider>().areaBox.isEmpty) {
+    if (context.read<LocalModel>().area['lat'] == null) {
       return StartView();
     } else {
-      return StartView();
-      // return BaseView();
+      return BaseView();
     }
   }
 }

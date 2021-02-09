@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
-class AuthModel with ChangeNotifier {
+class LoginModel with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
   final _initalImage =
       'https://firebasestorage.googleapis.com/v0/b/potato-market-4e46b.appspot.com/o/default-images%2Fuser.png?alt=media&token=1372fdee-be45-4d13-b69c-c67bed788b4d';

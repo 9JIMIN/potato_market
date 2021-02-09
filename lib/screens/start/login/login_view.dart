@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'auth_model.dart';
+import 'login_model.dart';
 
-class AuthScreen extends StatelessWidget {
+class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +22,10 @@ class AuthScreen extends StatelessWidget {
 
 class LoginForm extends StatefulWidget {
   @override
-  _AuthFormState createState() => _AuthFormState();
+  _LoginFormState createState() => _LoginFormState();
 }
 
-class _AuthFormState extends State<LoginForm> {
+class _LoginFormState extends State<LoginForm> {
   FocusNode _nameFocus;
   FocusNode _emailFocus;
   FocusNode _passwordFocus;
@@ -49,7 +49,7 @@ class _AuthFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
-    final model = Provider.of<AuthModel>(context);
+    final model = Provider.of<LoginModel>(context);
 
     Widget nameField() => TextFormField(
           key: ValueKey(1),
