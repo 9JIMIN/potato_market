@@ -1,108 +1,131 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'dart:developer';
+import 'package:provider/provider.dart';
+
+import 'profile_create_view.dart';
+import '../../../providers/cloud_services.dart';
+import '../../../providers/auth_services.dart';
+import '../../../providers/widget_services.dart';
+import '../../../providers/local_model.dart';
 
 class LoginModel with ChangeNotifier {
-  final _formKey = GlobalKey<FormState>();
-  final _initalImage =
-      'https://firebasestorage.googleapis.com/v0/b/potato-market-4e46b.appspot.com/o/default-images%2Fuser.png?alt=media&token=1372fdee-be45-4d13-b69c-c67bed788b4d';
+  FocusNode _phoneFieldFocus;
+  FocusNode _certFieldFocus;
 
-  String _name;
-  String _email;
-  String _password;
+  final _loginFormKey = GlobalKey<FormState>();
+  final _profileFormKey = GlobalKey<FormState>();
 
-  bool _isLogin = false;
-  bool _isLoading = false;
+  var _phoneFieldController = TextEditingController();
+  var _certFieldController = TextEditingController();
 
-  GlobalKey get formKey => _formKey;
-  bool get isLogin => _isLogin;
-  bool get isLoading => _isLoading;
+  var _isSendButtonDisabled = true;
+  var _isStartButtonDisabled = true;
+  var _isSendButtonPressed = false;
+  var _isLoginLoading = false;
+  var _isProfileLoading = false;
 
-  String onNameValidate(value) {
-    if (value.isEmpty) {
-      return '뭐라도 넣으렴.';
-    }
-    return null;
+  String _verificationId;
+
+  void onLoginInit() {
+    _phoneFieldFocus = FocusNode();
+    _certFieldFocus = FocusNode();
   }
 
-  String onEmailValidate(value) {
-    Pattern emailPattern =
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-    if (!RegExp(emailPattern).hasMatch(value)) {
-      return '이메일 확인 좀..';
-    }
-    return null;
+  void onLoginDispose() {
+    _phoneFieldFocus.dispose();
+    _certFieldFocus.dispose();
   }
 
-  String onPasswordValidate(value) {
-    if (value.length < 6) {
-      return '6개 이상의 문자를 넣어주길 바람.';
+  void phoneFieldOnChanged(String phoneInput) {
+    if (phoneInput.length >= 10) {
+      _isSendButtonDisabled = false;
+      notifyListeners();
     }
-    return null;
   }
 
-  void onChange() {
-    _isLogin = !_isLogin;
+  void certFieldOnChanged(String certInput) {
+    if (certInput.length == 6) {
+      _isStartButtonDisabled = false;
+      notifyListeners();
+    }
+  }
+
+  String certFieldValidator(String certInput) {
+    return '잘못된 인증번호';
+  }
+
+  void _setCertText(PhoneAuthCredential credential) {
+    _certFieldController.text = credential.smsCode;
+    _isStartButtonDisabled = false;
+  }
+
+  void _setVerificationId(String verificationId, int resendToken) {
+    _verificationId = verificationId;
+  }
+
+  // 인증번호 보내기 버튼 클릭시
+  void onSendButtonPressed(BuildContext context) async {
+    _isSendButtonPressed = true;
+    _phoneFieldFocus.unfocus();
+    WidgetServices.showSnack(context, '인증번호를 전송하였습니다.');
     notifyListeners();
+
+    await AuthServices().sendCertSMS(
+      context,
+      _phoneFieldController.text,
+      _setCertText,
+      _setVerificationId,
+    );
   }
 
-  void onNameSaved(value) {
-    _name = value;
-  }
-
-  void onEmailSaved(value) {
-    _email = value;
-  }
-
-  void onPasswordSaved(value) {
-    _password = value;
-  }
-
-  Future<void> onSubmit() async {
-    _isLoading = true;
+  // 시작버튼 클릭시
+  void onStartButtonPressed(BuildContext context) async {
+    _isLoginLoading = true;
+    _certFieldFocus.unfocus();
     notifyListeners();
-    try {
-      if (_isLogin) {
-        await login();
+
+    final uid = await AuthServices().signIn(
+      context,
+      _verificationId,
+      _certFieldController.text,
+    );
+    if (uid != null) {
+      final myProfile = await CloudServices().getUser(uid);
+      if (myProfile != null) {
+        context.read<LocalModel>().updateProfile(myProfile);
+        Navigator.of(context).pop();
       } else {
-        await addUser();
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ProfileCreateView(),
+          ),
+        );
       }
-    } catch (e) {
-      print(e);
+    } else {
+      _loginFormKey.currentState.validate();
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
-  Future<void> addUser() async {
-    if (!_formKey.currentState.validate()) {
-      return;
-    }
-    _formKey.currentState.save();
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _email,
-      password: _password,
-    );
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .set({
-      'name': _name,
-      'email': _email,
-      'imageUrl': _initalImage,
-      'createdDate': DateTime.now(),
-    });
-  }
+  // 계정생성 버튼 클릭시
+  void onProfileButtonPressed() {}
 
-  Future<void> login() async {
-    if (!_formKey.currentState.validate()) {
-      return;
-    }
-    _formKey.currentState.save();
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _email,
-      password: _password,
-    );
-    _isLoading = false;
-  }
+  ////////////////////////////
+  ////////////////////////////
+  /// getter, setter
+
+  set setPhoneFieldFocus(FocusNode focusNode) => _phoneFieldFocus = focusNode;
+  set setCertFieldFocus(FocusNode focusNode) => _certFieldFocus = focusNode;
+  FocusNode get phoneFieldFocus => _phoneFieldFocus;
+  FocusNode get certFieldFocus => _certFieldFocus;
+  GlobalKey get loginFormKey => _loginFormKey;
+  GlobalKey get profileFormKey => _profileFormKey;
+  TextEditingController get phoneFieldController => _phoneFieldController;
+  TextEditingController get certFieldController => _certFieldController;
+  bool get isSendButtonDisabled => _isSendButtonDisabled;
+  bool get isStartButtonDisabled => _isStartButtonDisabled;
+  bool get isSendButtonPressed => _isSendButtonPressed;
+  bool get isLoading => _isLoginLoading;
+  bool get isProfileLoading => _isProfileLoading;
 }

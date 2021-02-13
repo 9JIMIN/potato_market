@@ -24,6 +24,7 @@ dependencies:
   google_maps_flutter:
   geoflutterfire:
   http:
+  intl_phone_number_input:
 
 dev_dependencies:
   flutter_test:

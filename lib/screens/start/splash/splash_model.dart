@@ -12,7 +12,8 @@ class SplashModel with ChangeNotifier {
 
   Future<Widget> afterSplash(BuildContext context) async {
     await Future.delayed(Duration(seconds: 1));
-    if (context.read<LocalModel>().area['lat'] == null) {
+    context.read<LocalModel>().fetchData();
+    if (context.read<LocalModel>().area['name'] == null) {
       return StartView();
     } else {
       return BaseView();

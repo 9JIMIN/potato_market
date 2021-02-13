@@ -30,7 +30,7 @@ class _BaseViewState extends State<BaseView> {
                 },
               ),
               RaisedButton(
-                child: Text('OK'),
+                child: Text('로그인 하기'),
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(

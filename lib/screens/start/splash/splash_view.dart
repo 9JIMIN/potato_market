@@ -12,9 +12,9 @@ class SplashView extends StatelessWidget {
       navigateAfterFuture: model.afterSplash(context),
       image: Image.asset(
         model.splashImage,
-        fit: BoxFit.fill,
+        fit: BoxFit.contain,
       ),
-      photoSize: 100,
+      photoSize: 200,
       useLoader: false,
     );
   }
