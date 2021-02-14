@@ -33,16 +33,16 @@ class LocalModel with ChangeNotifier {
       'lat': _localBox.get('lat'),
       'lng': _localBox.get('lng'),
       'radius': _localBox.get('radius'),
-      'name': _localBox.get('name'),
+      'areaName': _localBox.get('name'),
     };
   }
 
   void fetchProfile() {
     _profile = {
       'uid': _localBox.get('uid'),
-      'name': _localBox.get('name'),
+      'profileName': _localBox.get('name'),
       'phoneNumber': _localBox.get('phoneNumber'),
-      'imageUrl': _localBox.get('imageUrl'),
+      'profileImageUrl': _localBox.get('imageUrl'),
     };
   }
 
@@ -67,16 +67,16 @@ class LocalModel with ChangeNotifier {
     _localBox.put('lat', area.latitude);
     _localBox.put('lng', area.longitude);
     _localBox.put('radius', area.radius);
-    _localBox.put('name', area.name);
+    _localBox.put('areaName', area.name);
     fetchArea();
     print('area update ==> ' + _area.toString());
   }
 
   void updateProfile(Profile profile) {
     _localBox.put('uid', profile.uid);
-    _localBox.put('name', profile.name);
+    _localBox.put('profileName', profile.name);
     _localBox.put('phoneNumber', profile.phoneNumber);
-    _localBox.put('imageUrl', profile.imageUrl);
+    _localBox.put('profileImageUrl', profile.imageUrl);
     fetchProfile();
     print('profile update ==> ' + _profile.toString());
   }

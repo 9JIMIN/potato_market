@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer';
 
 import 'widget_services.dart';
 
@@ -45,11 +46,7 @@ class AuthServices {
       final uid = (await _instance.signInWithCredential(credential)).user.uid;
       return uid;
     } catch (e) {
-      WidgetServices.showAlertDialog(
-        context,
-        '인증실패',
-        e.toString(),
-      );
+      log(e.toString());
       return null;
     }
   }

@@ -26,17 +26,17 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<LoginModel>(context, listen: false);
-    final isSendButtonDisabled = context.select(
-      (LoginModel model) => model.isSendButtonDisabled,
+    final isSendButtonActive = context.select(
+      (LoginModel model) => model.isSendButtonActive,
     );
-    final isStartButtonDisabled = context.select(
-      (LoginModel model) => model.isStartButtonDisabled,
+    final isStartButtonActive = context.select(
+      (LoginModel model) => model.isStartButtonActive,
     );
 
     Widget phoneField() => TextFormField(
           focusNode: model.phoneFieldFocus,
           controller: model.phoneFieldController,
-          onChanged: model.phoneFieldOnChanged,
+          onChanged: model.onPhoneFieldChanged,
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.phone,
           maxLength: 11,
@@ -51,11 +51,11 @@ class _LoginFormState extends State<LoginForm> {
 
     Widget sendButton() => RaisedButton(
           child: Text(model.isSendButtonPressed ? '인증번호 다시받기' : '인증번호 받기'),
-          onPressed: isSendButtonDisabled
-              ? null
-              : () {
+          onPressed: isSendButtonActive
+              ? () {
                   model.onSendButtonPressed(context);
-                },
+                }
+              : null,
           color: Colors.amber,
           disabledColor: Colors.grey,
         );
@@ -63,7 +63,7 @@ class _LoginFormState extends State<LoginForm> {
     Widget certField() => TextFormField(
           focusNode: model.certFieldFocus,
           controller: model.certFieldController,
-          onChanged: model.certFieldOnChanged,
+          onChanged: model.onCertFieldChanged,
           validator: model.certFieldValidator,
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
@@ -84,17 +84,17 @@ class _LoginFormState extends State<LoginForm> {
 
     Widget startButton() => RaisedButton(
           child: Text('동의하고 시작하기'),
-          onPressed: isStartButtonDisabled
-              ? null
-              : () {
+          onPressed: isStartButtonActive
+              ? () {
                   model.onStartButtonPressed(context);
-                },
+                }
+              : null,
           color: Colors.amber,
           disabledColor: Colors.grey,
         );
 
     return Form(
-      key: model.loginFormKey,
+      key: model.formKey,
       child: Column(
         children: [
           phoneField(),

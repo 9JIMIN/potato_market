@@ -10,12 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  provider:
+
   firebase_core:
   firebase_auth:
   firebase_storage:
   cloud_firestore:
-  provider:
+  
   multi_image_picker:
+  image_picker:
   modal_progress_hud:
   splashscreen:
   hive:
@@ -36,4 +39,5 @@ flutter:
   assets:
     - assets/splash_image.jpg
     - assets/start_image.jpg
+    - assets/default_user.jpg
   uses-material-design: true

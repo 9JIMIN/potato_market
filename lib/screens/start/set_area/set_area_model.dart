@@ -112,7 +112,9 @@ class SetAreaModel with ChangeNotifier {
 
   // 6. 저장버튼 클릭
   Future<void> onSavePressed(BuildContext context, String name) async {
-    _areaName = name;
+    if (name != null) {
+      _areaName = name;
+    }
     _updateArea();
     context.read<LocalModel>().updateArea(_newArea);
 

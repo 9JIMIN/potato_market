@@ -25,12 +25,19 @@ class CloudServices {
     });
   }
 
-  Future<Profile> getUser(String uid) async {
+  Future<Profile> getProfile(String uid) async {
     var docs = await _instance.collection('profile').doc(uid).get();
     if (docs.exists) {
       return Profile.fromQuery(docs);
     } else {
       return null;
     }
+  }
+
+  Future<void> createUser(Profile profile) async {
+    await _instance
+        .collection('profile')
+        .doc(profile.uid)
+        .set(Profile.toJson(profile));
   }
 }

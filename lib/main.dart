@@ -16,6 +16,7 @@ import 'screens/start/splash/splash_model.dart';
 import 'screens/start/set_area/set_area_model.dart';
 import 'screens/start/login/login_model.dart';
 import 'screens/start/start/start_model.dart';
+import 'screens/start/profile_editor/profile_editor_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +45,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => LoginModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProfileEditorModel(),
         ),
         ChangeNotifierProvider(
           create: (_) => MarketModel(),

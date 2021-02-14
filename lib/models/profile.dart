@@ -22,4 +22,13 @@ class Profile {
       imageUrl: doc['imageUrl'],
     );
   }
+
+  static Map<String, dynamic> toJson(Profile profile) {
+    return {
+      'uid': profile.uid,
+      'name': profile.name,
+      'phoneNumber': profile.phoneNumber,
+      'imageUrl': profile.imageUrl,
+    };
+  }
 }

@@ -7,12 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'login_model.dart';
 
-class LoginView extends StatefulWidget {
-  @override
-  _LoginViewState createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
+class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSended = context.select(
