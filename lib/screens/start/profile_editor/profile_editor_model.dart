@@ -6,8 +6,8 @@ import 'package:potato_market/screens/start/login/login_model.dart';
 import 'package:potato_market/secrets.dart';
 import 'package:provider/provider.dart';
 
-import '../../../providers/storage_services.dart';
-import '../../../providers/cloud_services.dart';
+import '../../../services/storage_services.dart';
+import '../../../services/cloud_services.dart';
 import '../../../models/profile.dart';
 import '../../../providers/local_model.dart';
 

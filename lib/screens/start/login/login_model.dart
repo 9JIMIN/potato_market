@@ -8,10 +8,10 @@ import 'dart:developer';
 import 'package:provider/provider.dart';
 
 import '../profile_editor/profile_editor_view.dart';
-import '../../../providers/cloud_services.dart';
-import '../../../providers/auth_services.dart';
-import '../../../providers/storage_services.dart';
-import '../../../providers/widget_services.dart';
+import '../../../services/cloud_services.dart';
+import '../../../services/auth_services.dart';
+import '../../../services/storage_services.dart';
+import '../../../services/widget_services.dart';
 import '../../../providers/local_model.dart';
 
 import '../../../models/profile.dart';

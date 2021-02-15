@@ -8,63 +8,39 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../../start/set_area/set_area_name_view.dart';
-import '../../start/base/base_view.dart';
+import '../../../services/navigation_services.dart';
+import '../../../services/location_services.dart';
 import '../../../providers/local_model.dart';
 import '../../../models/area.dart';
 import '../../../secrets.dart';
 
 class SetAreaModel with ChangeNotifier {
   LatLng _myPosition;
-
-  var _initalZoom = 12.0;
-
   GoogleMapController _mapController;
 
   var _markers = Set<Marker>();
-
   var _circles = Set<Circle>();
 
   LatLng _areaCenter;
-
   double _areaRadius = 5000;
-
   String _areaName;
 
   int _pointCount;
-
   int _productCount;
-
   int _tradeCount;
 
-  var _isRangeLoading = false;
+  var _isRangeLoading = true;
 
   String _fullAddress;
-
   Area _newArea;
-
-  LatLng get myPosition => _myPosition;
-  double get initalZoom => _initalZoom;
-  set setMapController(GoogleMapController controller) =>
-      _mapController = controller;
-  Set<Marker> get markers => _markers;
-  Set<Circle> get circle => _circles;
-  LatLng get areaCenter => _areaCenter;
-  double get areaRadius => _areaRadius;
-  String get areaName => _areaName;
-  int get pointCount => _pointCount;
-  int get productCount => _productCount;
-  int get tradeCount => _tradeCount;
-  bool get isRangeLoading => _isRangeLoading;
-  String get fullAddress => _fullAddress;
 
   // **********
   // **** 메서드
   // **********
 
   // 1. FutureBuilder
-  Future<void> onRangeFutureBuild() async {
-    await _updateMyPosition();
+  Future<void> onRangeFutureBuild(BuildContext context) async {
+    _myPosition = await LocationServices.getMyPosition(context);
   }
 
   Future<void> onNameFutureBuild() async {
@@ -72,16 +48,14 @@ class SetAreaModel with ChangeNotifier {
   }
 
   // 2. 카메라 움직일 때
-  void onCameraMoveStarted() async {
+  void onCameraMoveStarted() {
     _deleteCircle();
-
     notifyListeners();
   }
 
   // 3. 카메라 멈출 때
   Future<void> onCameraIdle(BuildContext context) async {
     _isRangeLoading = true;
-    notifyListeners();
 
     await _updateAreaCenter(context);
     _createCircle();
@@ -96,18 +70,18 @@ class SetAreaModel with ChangeNotifier {
   Future<void> onSliderMove(double radius) async {
     _areaRadius = radius;
     _isRangeLoading = true;
+
     _createCircle();
     notifyListeners();
 
     await _updateCount();
-
     _isRangeLoading = false;
     notifyListeners();
   }
 
   // 5. 다음버튼 클릭
   void onNextPressed(BuildContext context) {
-    _toSetAreaName(context);
+    NavigationServices.toSetAreaName(context);
   }
 
   // 6. 저장버튼 클릭
@@ -118,20 +92,7 @@ class SetAreaModel with ChangeNotifier {
     _updateArea();
     context.read<LocalModel>().updateArea(_newArea);
 
-    _toBase(context);
-  }
-
-  Future<void> _updateMyPosition() async {
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission();
-    log(permission.toString());
-
-    if (permission == LocationPermission.denied) {
-      await Geolocator.requestPermission();
-    }
-
-    var myPosition = await Geolocator.getCurrentPosition();
-    _myPosition = LatLng(myPosition.latitude, myPosition.longitude);
+    NavigationServices.toBase(context);
   }
 
   Future<void> _updateCount() async {
@@ -194,16 +155,17 @@ class SetAreaModel with ChangeNotifier {
     );
   }
 
-  void _toSetAreaName(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => SetAreaNameView()),
-    );
-  }
-
-  void _toBase(BuildContext context) {
-    Navigator.of(context).pop();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => BaseView()),
-    );
-  }
+  LatLng get myPosition => _myPosition;
+  set setMapController(GoogleMapController controller) =>
+      _mapController = controller;
+  Set<Marker> get markers => _markers;
+  Set<Circle> get circle => _circles;
+  LatLng get areaCenter => _areaCenter;
+  double get areaRadius => _areaRadius;
+  String get areaName => _areaName;
+  int get pointCount => _pointCount;
+  int get productCount => _productCount;
+  int get tradeCount => _tradeCount;
+  bool get isRangeLoading => _isRangeLoading;
+  String get fullAddress => _fullAddress;
 }

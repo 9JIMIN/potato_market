@@ -8,8 +8,6 @@ import 'screens/start/splash/splash_view.dart';
 
 // provider
 import 'providers/local_model.dart';
-import 'providers/auth_services.dart';
-import 'providers/cloud_services.dart';
 import 'screens/market/market/market_model.dart';
 import 'screens/start/base/base_model.dart';
 import 'screens/start/splash/splash_model.dart';

@@ -6,7 +6,7 @@ import 'start_model.dart';
 class StartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var model = Provider.of<StartModel>(context, listen: false);
+    final model = Provider.of<StartModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Welcome to 감자마켓'),
@@ -15,7 +15,7 @@ class StartView extends StatelessWidget {
         child: RaisedButton(
           child: Text('시작!'),
           onPressed: () {
-            model.toPlace(context);
+            model.onStartPressed(context);
           },
         ),
       ),
