@@ -33,16 +33,16 @@ class LocalModel with ChangeNotifier {
       'lat': _localBox.get('lat'),
       'lng': _localBox.get('lng'),
       'radius': _localBox.get('radius'),
-      'areaName': _localBox.get('name'),
+      'areaName': _localBox.get('areaName'),
     };
   }
 
   void fetchProfile() {
     _profile = {
       'uid': _localBox.get('uid'),
-      'profileName': _localBox.get('name'),
+      'profileName': _localBox.get('profileName'),
       'phoneNumber': _localBox.get('phoneNumber'),
-      'profileImageUrl': _localBox.get('imageUrl'),
+      'profileImageUrl': _localBox.get('profileImageUrl'),
     };
   }
 
@@ -56,7 +56,7 @@ class LocalModel with ChangeNotifier {
 
   void fetchWorkCategories() {
     _workCategories = {
-      'cleanning': _localBox.get('clean'),
+      'cleanning': _localBox.get('cleanning'),
       'delivery': _localBox.get('delivery'),
       'etc': _localBox.get('etc'),
     };
@@ -79,6 +79,13 @@ class LocalModel with ChangeNotifier {
     _localBox.put('profileImageUrl', profile.imageUrl);
     fetchProfile();
     print('profile update ==> ' + _profile.toString());
+  }
+
+  void updateUidAndPhoneNumber(String uid, String phoneNumber) {
+    _localBox.put('uid', uid);
+    _localBox.put('phoneNumber', phoneNumber);
+    fetchProfile();
+    print('uid and phoneNumber update ==>' + _profile.toString());
   }
 
   void updateProductCategories(Map<String, bool> productCategories) {

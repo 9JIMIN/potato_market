@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'profile_editor_model.dart';
+import '../../../services/navigation_services.dart';
 
 class ProfileEditorView extends StatefulWidget {
   @override
@@ -23,8 +24,9 @@ class _ProfileEditorViewState extends State<ProfileEditorView> {
 
   @override
   Widget build(BuildContext context) {
-    var model = Provider.of<ProfileEditorModel>(context);
+    final model = Provider.of<ProfileEditorModel>(context);
     return Scaffold(
+      key: model.testkey,
       appBar: AppBar(
         title: Text('프로필 입력'),
       ),
@@ -34,18 +36,18 @@ class _ProfileEditorViewState extends State<ProfileEditorView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CircleAvatar(
-              radius: 40.0,
+              radius: 50.0,
               backgroundColor: Colors.white,
               child: CircleAvatar(
                 backgroundImage: model.profileImage == null
                     ? AssetImage('assets/default_user.jpg')
                     : FileImage(model.profileImage),
-                radius: 38.0,
+                radius: 50,
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
-                    radius: 12.0,
+                    radius: 15.0,
                     child: IconButton(
                       icon: Icon(Icons.camera_alt),
                       iconSize: 15,
@@ -78,6 +80,8 @@ class _ProfileEditorViewState extends State<ProfileEditorView> {
             ),
             SizedBox(height: 20),
             RaisedButton(
+              color: Colors.amber,
+              disabledColor: Colors.grey,
               child: Text('계정 생성'),
               onPressed: model.isRegisterButtonActive
                   ? () {

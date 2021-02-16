@@ -30,8 +30,8 @@ class SetAreaNameView extends StatelessWidget {
                           TextFormField(
                               decoration: InputDecoration(),
                               initialValue: model.areaName,
-                              onSaved: (String name) async {
-                                await model.onSavePressed(context, name);
+                              onSaved: (String name) {
+                                model.onSavePressed(context, name);
                               }),
                           Text('중심 주소: ${model.fullAddress}'),
                           Text('반지름 크기: ${model.areaRadius / 1000} km'),

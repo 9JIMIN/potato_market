@@ -14,7 +14,8 @@ class _BaseViewState extends State<BaseView> {
   @override
   void initState() {
     super.initState();
-    var isLogin = context.read<LocalModel>().profile['uid'] != null;
+    var isLogin = context.read<LocalModel>().profile['profileImageUrl'] != null;
+    // context.read<LocalModel>().deleteData();
     if (!isLogin) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await showDialog(

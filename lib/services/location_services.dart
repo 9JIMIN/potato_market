@@ -6,21 +6,27 @@ import 'widget_services.dart';
 class LocationServices {
   static Future<LatLng> getMyPosition(context) async {
     var permission = await Geolocator.checkPermission();
-    var count = 0;
+    var isFirst = true;
+    var isForever = false;
     while (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
-      if (count > 0) {
+      if (!isFirst) {
         await WidgetServices.showLocationAlertDialog(context);
+      }
+      if (isForever) {
+        permission = await Geolocator.checkPermission();
       }
 
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
-      } else {
+      } else if (permission == LocationPermission.deniedForever) {
         await WidgetServices.showAppSettingDialog(context);
-        permission = await Geolocator.checkPermission();
+        isForever = true;
+      } else {
+        continue;
       }
 
-      count++;
+      isFirst = false;
     }
 
     final myPosition = await Geolocator.getCurrentPosition(

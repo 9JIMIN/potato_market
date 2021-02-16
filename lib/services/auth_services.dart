@@ -21,11 +21,7 @@ class AuthServices {
       phoneNumber: '+82 $phoneNumber',
       verificationCompleted: setCertText,
       verificationFailed: (FirebaseAuthException e) {
-        WidgetServices.showAlertDialog(
-          context,
-          '메세지 전송 실패',
-          e.toString(),
-        );
+        WidgetServices.showAlertDialog(context, '메세지 전송 실패', e.toString());
       },
       codeSent: setVerificationId,
       codeAutoRetrievalTimeout: (String verificationId) {},
@@ -45,6 +41,9 @@ class AuthServices {
     try {
       final uid = (await _instance.signInWithCredential(credential)).user.uid;
       return uid;
+    } on FirebaseAuthException catch (e) {
+      log(e.toString());
+      return null;
     } catch (e) {
       log(e.toString());
       return null;

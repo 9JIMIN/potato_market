@@ -1,20 +1,17 @@
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:developer';
 import 'package:provider/provider.dart';
 
 import '../profile_editor/profile_editor_view.dart';
 import '../../../services/cloud_services.dart';
 import '../../../services/auth_services.dart';
-import '../../../services/storage_services.dart';
 import '../../../services/widget_services.dart';
 import '../../../providers/local_model.dart';
-
-import '../../../models/profile.dart';
+import '../../../services/navigation_services.dart';
 
 class LoginModel with ChangeNotifier {
   FocusNode _phoneFieldFocus;
@@ -32,6 +29,9 @@ class LoginModel with ChangeNotifier {
 
   String _uid;
   String _verificationId;
+
+  GlobalKey _testkey = GlobalKey();
+  GlobalKey get testkey => _testkey;
 
   void onLoginInit() {
     _phoneFieldFocus = FocusNode();
@@ -68,7 +68,7 @@ class LoginModel with ChangeNotifier {
   }
 
   String certFieldValidator(String certInput) {
-    return '잘못된 인증번호';
+    return '인증번호가 일치하지 않습니다.';
   }
 
   void _setCertText(PhoneAuthCredential credential) {
@@ -83,17 +83,24 @@ class LoginModel with ChangeNotifier {
 
   // 인증번호 보내기 버튼 클릭시
   void onSendButtonPressed(BuildContext context) async {
-    _isSendButtonPressed = true;
-    _phoneFieldFocus.unfocus();
-    WidgetServices.showSnack(context, '인증번호를 전송하였습니다.');
-    notifyListeners();
+    if (_phoneFieldController.text.startsWith('01')) {
+      WidgetServices.showSnack(context, '인증번호를 전송하였습니다.(최대 30초 소요)');
+      _phoneFieldFocus.unfocus();
 
-    await AuthServices().sendCertSMS(
-      context,
-      _phoneFieldController.text,
-      _setCertText,
-      _setVerificationId,
-    );
+      if (!_isSendButtonPressed) {
+        _isSendButtonPressed = true;
+        notifyListeners();
+      }
+
+      await AuthServices().sendCertSMS(
+        context,
+        _phoneFieldController.text,
+        _setCertText,
+        _setVerificationId,
+      );
+    } else {
+      WidgetServices.showSnack(context, '전화번호 형태가 잘못되었습니다.');
+    }
   }
 
   // 시작버튼 클릭시
@@ -102,25 +109,31 @@ class LoginModel with ChangeNotifier {
     _certFieldFocus.unfocus();
     notifyListeners();
 
-    _uid = await AuthServices().signIn(
+    final signInResult = await AuthServices().signIn(
       context,
       _verificationId,
       _certFieldController.text,
     );
-    if (_uid != null) {
+
+    if (signInResult == null) {
+      _formKey.currentState.validate();
+      await Future.delayed(Duration(seconds: 3));
+      _formKey.currentState.reset();
+    } else {
+      _uid = signInResult;
       final myProfile = await CloudServices().getProfile(_uid);
-      if (myProfile != null) {
+      if (myProfile == null) {
+        context.read<LocalModel>().updateUidAndPhoneNumber(
+              _uid,
+              _phoneFieldController.text,
+            );
+        NavigationServices.toProfileEditor(
+            _formKey.currentContext); // formKey로 최신 context받기 테스트
+        // 이게 되면, context따로 안받아도 되는 건데..
+      } else {
         context.read<LocalModel>().updateProfile(myProfile);
         Navigator.of(context).pop(); // 마켓화면으로 이동
-      } else {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ProfileEditorView(),
-          ),
-        );
       }
-    } else {
-      _formKey.currentState.validate();
     }
   }
 

@@ -23,7 +23,12 @@ class WidgetServices {
       builder: (_) => AlertDialog(
         title: Text(title),
         content: Text(content),
-        actions: [],
+        actions: [
+          FlatButton(
+            child: Text('확인'),
+            onPressed: Navigator.of(context).pop,
+          )
+        ],
       ),
     );
   }

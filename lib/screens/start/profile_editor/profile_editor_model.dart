@@ -2,14 +2,14 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:potato_market/screens/start/login/login_model.dart';
-import 'package:potato_market/secrets.dart';
 import 'package:provider/provider.dart';
 
+import '../../../secrets.dart';
 import '../../../services/storage_services.dart';
 import '../../../services/cloud_services.dart';
 import '../../../models/profile.dart';
 import '../../../providers/local_model.dart';
+import '../../../services/navigation_services.dart';
 
 class ProfileEditorModel with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
@@ -22,6 +22,9 @@ class ProfileEditorModel with ChangeNotifier {
 
   var _isRegisterButtonActive = false;
   var _isLoading = false;
+
+  GlobalKey _testkey = GlobalKey();
+  GlobalKey get testkey => _testkey;
 
   void onProfileInit() {
     _nameFieldFocus = FocusNode();
@@ -83,7 +86,6 @@ class ProfileEditorModel with ChangeNotifier {
   // 계정생성 버튼 클릭시
   void onProfileButtonPressed(BuildContext context) async {
     _isLoading = true;
-
     notifyListeners();
 
     _name = _nameFieldController.text;
@@ -93,15 +95,15 @@ class ProfileEditorModel with ChangeNotifier {
 
     if (imageUrl != null) {
       final profile = Profile(
-        uid: context.read<LoginModel>().uid,
+        uid: context.read<LocalModel>().profile['uid'],
+        phoneNumber: context.read<LocalModel>().profile['phoneNumber'],
         imageUrl: imageUrl,
         name: _name,
-        phoneNumber: context.read<LoginModel>().phoneNumber,
       );
       await CloudServices().createUser(profile);
       context.read<LocalModel>().updateProfile(profile);
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
+      NavigationServices.toBase(
+          _formKey.currentContext); // formKey로 최신 context를 받을 수 있을까??
     }
   }
 

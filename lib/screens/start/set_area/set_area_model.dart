@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -49,12 +47,12 @@ class SetAreaModel with ChangeNotifier {
 
   // 2. 카메라 움직일 때
   void onCameraMoveStarted() {
-    _deleteCircle();
+    _circles.clear();
     notifyListeners();
   }
 
   // 3. 카메라 멈출 때
-  Future<void> onCameraIdle(BuildContext context) async {
+  void onCameraIdle(BuildContext context) async {
     _isRangeLoading = true;
 
     await _updateAreaCenter(context);
@@ -67,7 +65,7 @@ class SetAreaModel with ChangeNotifier {
   }
 
   // 4. 슬라이더 움직이면
-  Future<void> onSliderMove(double radius) async {
+  void onSliderMove(double radius) async {
     _areaRadius = radius;
     _isRangeLoading = true;
 
@@ -85,7 +83,7 @@ class SetAreaModel with ChangeNotifier {
   }
 
   // 6. 저장버튼 클릭
-  Future<void> onSavePressed(BuildContext context, String name) async {
+  void onSavePressed(BuildContext context, String name) async {
     if (name != null) {
       _areaName = name;
     }
@@ -139,12 +137,8 @@ class SetAreaModel with ChangeNotifier {
     );
   }
 
-  void _deleteCircle() {
-    _circles = Set<Circle>();
-  }
-
   void _createCircle() {
-    _circles = Set<Circle>();
+    _circles.clear();
     _circles.add(
       Circle(
         circleId: CircleId('1'),

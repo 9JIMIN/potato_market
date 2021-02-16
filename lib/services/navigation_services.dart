@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/start/set_area/set_area_name_view.dart';
 import '../screens/start/set_area/set_area_range_view.dart';
 import '../screens/start/base/base_view.dart';
+import '../screens/start/profile_editor/profile_editor_view.dart';
 
 class NavigationServices {
   static void toSetAreaRange(BuildContext context) {
@@ -22,6 +23,13 @@ class NavigationServices {
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => BaseView()),
       (_) => false,
+    );
+  }
+
+  static void toProfileEditor(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => ProfileEditorView()),
     );
   }
 }
