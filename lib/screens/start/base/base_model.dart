@@ -1,25 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
 
 import '../../market/market/widgets/market_appbar.dart';
 import '../../market/market/market_screen.dart';
 import '../../market/market/widgets/market_floatbutton.dart';
-import '../../market/product_editor/product_editor_screen.dart';
 
 import '../../community/community/widgets/community_appbar.dart';
 import '../../community/community/community_body.dart';
 import '../../community/community/widgets/community_floatbutton.dart';
-import '../../community/post_editor/post_editor_screen.dart';
 
 import '../../chat/chat/chat_appbar.dart';
 import '../../chat/chat/chat_body.dart';
 
 import '../../account/my_account/myaccount_body.dart';
 import '../../account/my_account/widgets/myaccount_appbar.dart';
-
-import '../../../providers/local_model.dart';
 
 class BaseModel with ChangeNotifier {
   int _selectedIndex = 0;
@@ -50,10 +44,6 @@ class BaseModel with ChangeNotifier {
     ),
   ];
 
-  int get selectedIndex => _selectedIndex;
-  List<Widget> get bodies => _bodies;
-  List<BottomNavigationBarItem> get bottomItems => _bottomItems;
-
   Widget appbar() {
     switch (_selectedIndex) {
       case 0:
@@ -78,35 +68,13 @@ class BaseModel with ChangeNotifier {
     }
   }
 
-  // ******* Methods **********
-  // **************************
-
-  // FloatingActionButton tap
-  void onMarketFloatPressed(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProductEditorScreen(),
-      ),
-    );
-  }
-
-  void onCommunityFloatPressed(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PostEditorScreen(),
-      ),
-    );
-  }
-
-  void onMyPotatoFloatPressed() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
   // Bottom tap
   void onBottomTap(int index) {
     _selectedIndex = index;
     notifyListeners();
   }
+
+  int get selectedIndex => _selectedIndex;
+  List<Widget> get bodies => _bodies;
+  List<BottomNavigationBarItem> get bottomItems => _bottomItems;
 }

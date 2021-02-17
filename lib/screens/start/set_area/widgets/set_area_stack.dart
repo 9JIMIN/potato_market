@@ -25,7 +25,7 @@ class SetAreaStack extends StatelessWidget {
           tiltGesturesEnabled: false,
           onCameraMoveStarted: model.onCameraMoveStarted,
           onCameraIdle: () {
-            model.onCameraIdle(context);
+            model.onCameraIdle();
           },
         );
 
@@ -70,7 +70,7 @@ class SetAreaStack extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    model.onNextPressed(context);
+                    model.onNextPressed();
                   },
                   child: Text('범위 등록하기'),
                 ),
@@ -79,6 +79,7 @@ class SetAreaStack extends StatelessWidget {
           ),
         );
     return Stack(
+      key: model.key,
       alignment: Alignment.center,
       children: [
         googleMap(),

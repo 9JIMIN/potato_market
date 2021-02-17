@@ -31,7 +31,7 @@ class SetAreaNameView extends StatelessWidget {
                               decoration: InputDecoration(),
                               initialValue: model.areaName,
                               onSaved: (String name) {
-                                model.onSavePressed(context, name);
+                                model.onSavePressed(name);
                               }),
                           Text('중심 주소: ${model.fullAddress}'),
                           Text('반지름 크기: ${model.areaRadius / 1000} km'),

@@ -30,10 +30,6 @@ class ProfileEditorModel with ChangeNotifier {
     _nameFieldFocus = FocusNode();
   }
 
-  void onProfileDispose() {
-    _nameFieldFocus.dispose();
-  }
-
   void onNameFieldChanged(String nameInput) {
     if (nameInput.length != 0) {
       _isRegisterButtonActive = true;

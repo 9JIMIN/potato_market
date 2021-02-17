@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:potato_market/providers/local_model.dart';
-import 'package:potato_market/screens/start/login/login_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../../providers/local_model.dart';
+import '../../../services/navigation_services.dart';
+import '../../../screens/start/login/login_view.dart';
+import './widgets/login_dialog.dart';
 import 'base_model.dart';
 
 class BaseView extends StatefulWidget {
@@ -15,33 +17,11 @@ class _BaseViewState extends State<BaseView> {
   void initState() {
     super.initState();
     var isLogin = context.read<LocalModel>().profile['profileImageUrl'] != null;
-    // context.read<LocalModel>().deleteData();
     if (!isLogin) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await showDialog(
           context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text('로그인 하시겠습니까?'),
-            content: Text('로그인 없이도 이용은 가능합니다.'),
-            actions: [
-              FlatButton(
-                child: Text('나가기'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              RaisedButton(
-                child: Text('로그인 하기'),
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => LoginView(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+          builder: (_) => LoginDialog(),
         );
       });
     }

@@ -17,12 +17,6 @@ class _ProfileEditorViewState extends State<ProfileEditorView> {
   }
 
   @override
-  void dispose() {
-    context.read<ProfileEditorModel>().onProfileDispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final model = Provider.of<ProfileEditorModel>(context);
     return Scaffold(

@@ -18,12 +18,6 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   @override
-  void dispose() {
-    context.read<LoginModel>().onLoginDispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final model = Provider.of<LoginModel>(context, listen: false);
     final isSendButtonActive = context.select(
@@ -51,11 +45,7 @@ class _LoginFormState extends State<LoginForm> {
 
     Widget sendButton() => RaisedButton(
           child: Text(model.isSendButtonPressed ? '인증번호 다시받기' : '인증번호 받기'),
-          onPressed: isSendButtonActive
-              ? () {
-                  model.onSendButtonPressed(context);
-                }
-              : null,
+          onPressed: isSendButtonActive ? model.onSendButtonPressed : null,
           color: Colors.amber,
           disabledColor: Colors.grey,
         );
@@ -84,17 +74,13 @@ class _LoginFormState extends State<LoginForm> {
 
     Widget startButton() => RaisedButton(
           child: Text('동의하고 시작하기'),
-          onPressed: isStartButtonActive
-              ? () {
-                  model.onStartButtonPressed(context);
-                }
-              : null,
+          onPressed: isStartButtonActive ? model.onStartButtonPressed : null,
           color: Colors.amber,
           disabledColor: Colors.grey,
         );
 
     return Form(
-      key: model.formKey,
+      key: model.key,
       child: Column(
         children: [
           phoneField(),

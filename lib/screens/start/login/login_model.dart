@@ -1,12 +1,8 @@
-import 'dart:io';
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../profile_editor/profile_editor_view.dart';
 import '../../../services/cloud_services.dart';
 import '../../../services/auth_services.dart';
 import '../../../services/widget_services.dart';
@@ -17,7 +13,7 @@ class LoginModel with ChangeNotifier {
   FocusNode _phoneFieldFocus;
   FocusNode _certFieldFocus;
 
-  final _formKey = GlobalKey<FormState>();
+  final _key = GlobalKey<FormState>();
 
   var _phoneFieldController = TextEditingController();
   var _certFieldController = TextEditingController();
@@ -27,20 +23,11 @@ class LoginModel with ChangeNotifier {
   var _isSendButtonPressed = false;
   var _isLoading = false;
 
-  String _uid;
   String _verificationId;
-
-  GlobalKey _testkey = GlobalKey();
-  GlobalKey get testkey => _testkey;
 
   void onLoginInit() {
     _phoneFieldFocus = FocusNode();
     _certFieldFocus = FocusNode();
-  }
-
-  void onLoginDispose() {
-    _phoneFieldFocus.dispose();
-    _certFieldFocus.dispose();
   }
 
   void onPhoneFieldChanged(String phoneInput) {
@@ -82,9 +69,9 @@ class LoginModel with ChangeNotifier {
   }
 
   // 인증번호 보내기 버튼 클릭시
-  void onSendButtonPressed(BuildContext context) async {
+  void onSendButtonPressed() async {
     if (_phoneFieldController.text.startsWith('01')) {
-      WidgetServices.showSnack(context, '인증번호를 전송하였습니다.(최대 30초 소요)');
+      WidgetServices.showSnack(key.currentContext, '인증번호를 전송하였습니다.(최대 30초 소요)');
       _phoneFieldFocus.unfocus();
 
       if (!_isSendButtonPressed) {
@@ -93,46 +80,44 @@ class LoginModel with ChangeNotifier {
       }
 
       await AuthServices().sendCertSMS(
-        context,
+        _key.currentContext,
         _phoneFieldController.text,
         _setCertText,
         _setVerificationId,
       );
     } else {
-      WidgetServices.showSnack(context, '전화번호 형태가 잘못되었습니다.');
+      WidgetServices.showSnack(_key.currentContext, '전화번호 형태가 잘못되었습니다.');
     }
   }
 
   // 시작버튼 클릭시
-  void onStartButtonPressed(BuildContext context) async {
+  void onStartButtonPressed() async {
     _isLoading = true;
     _certFieldFocus.unfocus();
     notifyListeners();
 
     final signInResult = await AuthServices().signIn(
-      context,
+      _key.currentContext,
       _verificationId,
       _certFieldController.text,
     );
 
     if (signInResult == null) {
-      _formKey.currentState.validate();
+      _key.currentState.validate();
       await Future.delayed(Duration(seconds: 3));
-      _formKey.currentState.reset();
+      _key.currentState.reset();
     } else {
-      _uid = signInResult;
-      final myProfile = await CloudServices().getProfile(_uid);
+      final uid = signInResult;
+      final myProfile = await CloudServices().getProfile(uid);
       if (myProfile == null) {
-        context.read<LocalModel>().updateUidAndPhoneNumber(
-              _uid,
+        _key.currentContext.read<LocalModel>().updateUidAndPhoneNumber(
+              uid,
               _phoneFieldController.text,
             );
-        NavigationServices.toProfileEditor(
-            _formKey.currentContext); // formKey로 최신 context받기 테스트
-        // 이게 되면, context따로 안받아도 되는 건데..
+        NavigationServices.toProfileEditor(_key.currentContext);
       } else {
-        context.read<LocalModel>().updateProfile(myProfile);
-        Navigator.of(context).pop(); // 마켓화면으로 이동
+        _key.currentContext.read<LocalModel>().updateProfile(myProfile);
+        NavigationServices.toBase(_key.currentContext);
       }
     }
   }
@@ -145,13 +130,12 @@ class LoginModel with ChangeNotifier {
   set setCertFieldFocus(FocusNode focusNode) => _certFieldFocus = focusNode;
   FocusNode get phoneFieldFocus => _phoneFieldFocus;
   FocusNode get certFieldFocus => _certFieldFocus;
-  GlobalKey get formKey => _formKey;
+  GlobalKey get key => _key;
   TextEditingController get phoneFieldController => _phoneFieldController;
   TextEditingController get certFieldController => _certFieldController;
   bool get isSendButtonActive => _isSendButtonActive;
   bool get isStartButtonActive => _isStartButtonActive;
   bool get isSendButtonPressed => _isSendButtonPressed;
   bool get isLoading => _isLoading;
-  String get uid => _uid;
   String get phoneNumber => _phoneFieldController.text;
 }

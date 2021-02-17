@@ -15,6 +15,7 @@ import '../../../secrets.dart';
 class SetAreaModel with ChangeNotifier {
   LatLng _myPosition;
   GoogleMapController _mapController;
+  GlobalKey _key = GlobalKey();
 
   var _markers = Set<Marker>();
   var _circles = Set<Circle>();
@@ -38,7 +39,7 @@ class SetAreaModel with ChangeNotifier {
 
   // 1. FutureBuilder
   Future<void> onRangeFutureBuild(BuildContext context) async {
-    _myPosition = await LocationServices.getMyPosition(context);
+    _myPosition = await LocationServices.getMyPosition(_key.currentContext);
   }
 
   Future<void> onNameFutureBuild() async {
@@ -52,10 +53,10 @@ class SetAreaModel with ChangeNotifier {
   }
 
   // 3. 카메라 멈출 때
-  void onCameraIdle(BuildContext context) async {
+  void onCameraIdle() async {
     _isRangeLoading = true;
 
-    await _updateAreaCenter(context);
+    await _updateAreaCenter();
     _createCircle();
     notifyListeners();
 
@@ -78,19 +79,19 @@ class SetAreaModel with ChangeNotifier {
   }
 
   // 5. 다음버튼 클릭
-  void onNextPressed(BuildContext context) {
-    NavigationServices.toSetAreaName(context);
+  void onNextPressed() {
+    NavigationServices.toSetAreaName(_key.currentContext);
   }
 
   // 6. 저장버튼 클릭
-  void onSavePressed(BuildContext context, String name) async {
+  void onSavePressed(String name) async {
     if (name != null) {
       _areaName = name;
     }
     _updateArea();
-    context.read<LocalModel>().updateArea(_newArea);
+    _key.currentContext.read<LocalModel>().updateArea(_newArea);
 
-    NavigationServices.toBase(context);
+    NavigationServices.toBase(_key.currentContext);
   }
 
   Future<void> _updateCount() async {
@@ -101,10 +102,10 @@ class SetAreaModel with ChangeNotifier {
     _tradeCount = DateTime.now().microsecond.round();
   }
 
-  Future<void> _updateAreaCenter(BuildContext context) async {
-    var pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    var mediaSize = MediaQuery.of(context).size;
-    var appbarHeight = Scaffold.of(context).appBarMaxHeight;
+  Future<void> _updateAreaCenter() async {
+    var pixelRatio = MediaQuery.of(_key.currentContext).devicePixelRatio;
+    var mediaSize = MediaQuery.of(_key.currentContext).size;
+    var appbarHeight = Scaffold.of(_key.currentContext).appBarMaxHeight;
 
     _areaCenter = await _mapController.getLatLng(
       ScreenCoordinate(
@@ -162,4 +163,5 @@ class SetAreaModel with ChangeNotifier {
   int get tradeCount => _tradeCount;
   bool get isRangeLoading => _isRangeLoading;
   String get fullAddress => _fullAddress;
+  GlobalKey get key => _key;
 }
