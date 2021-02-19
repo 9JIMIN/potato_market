@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../market/market/widgets/market_appbar.dart';
-import '../../market/market/market_screen.dart';
+import '../../market/market/market_view.dart';
 import '../../market/market/widgets/market_floatbutton.dart';
 
 import '../../community/community/widgets/community_appbar.dart';
@@ -19,7 +19,7 @@ class BaseModel with ChangeNotifier {
   int _selectedIndex = 0;
 
   List<Widget> _bodies = <Widget>[
-    MarketScreen(),
+    MarketView(),
     CommunityBody(),
     ChatBody(),
     MyAccountBody(),

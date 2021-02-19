@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer';
 
 import '../product_editor_model.dart';
-import './product_editor_image_row.dart';
+import 'image_row.dart';
 
-class ProductEditorForm extends StatefulWidget {
+class EditorForm extends StatefulWidget {
   @override
-  _ProductEditorFormState createState() => _ProductEditorFormState();
+  _EditorFormState createState() => _EditorFormState();
 }
 
-class _ProductEditorFormState extends State<ProductEditorForm> {
+class _EditorFormState extends State<EditorForm> {
   FocusNode _titleNode;
-  FocusNode _categoryNode;
   FocusNode _priceNode;
   FocusNode _descriptionNode;
 
@@ -20,7 +20,6 @@ class _ProductEditorFormState extends State<ProductEditorForm> {
   void initState() {
     super.initState();
     _titleNode = FocusNode();
-    _categoryNode = FocusNode();
     _priceNode = FocusNode();
     _descriptionNode = FocusNode();
   }
@@ -28,7 +27,6 @@ class _ProductEditorFormState extends State<ProductEditorForm> {
   @override
   void dispose() {
     _titleNode.dispose();
-    _categoryNode.dispose();
     _priceNode.dispose();
     _descriptionNode.dispose();
     super.dispose();
@@ -38,25 +36,22 @@ class _ProductEditorFormState extends State<ProductEditorForm> {
   Widget build(BuildContext context) {
     final model = Provider.of<ProductEditorModel>(context);
     final node = FocusScope.of(context);
-
     Widget titleField() => TextFormField(
           decoration: InputDecoration(
             hintText: '제품이름',
           ),
           focusNode: _titleNode,
-          onEditingComplete: () => node.nextFocus(),
+          onEditingComplete: () => _priceNode.requestFocus(),
           textInputAction: TextInputAction.next,
-          onSaved: model.onTitleSaved,
+          onSaved: (String title) {
+            model.setTitle = title;
+          },
         );
 
-    Widget categoryField() => TextFormField(
-          decoration: InputDecoration(
-            hintText: '카테고리',
-          ),
-          focusNode: _categoryNode,
-          onEditingComplete: () => node.nextFocus(),
-          textInputAction: TextInputAction.next,
-          onSaved: model.onCategorySaved,
+    Widget categoryField() => ListTile(
+          title: Text(model.category == null ? '카테고리' : model.category),
+          trailing: Icon(Icons.arrow_drop_down),
+          onTap: model.onCategoryPressed,
         );
 
     Widget priceField() => TextFormField(
@@ -70,7 +65,9 @@ class _ProductEditorFormState extends State<ProductEditorForm> {
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
           ],
-          onSaved: model.onPriceSaved,
+          onSaved: (String price) {
+            model.setPrice = price;
+          },
         );
 
     Widget descriptionField() => TextFormField(
@@ -80,13 +77,15 @@ class _ProductEditorFormState extends State<ProductEditorForm> {
           focusNode: _descriptionNode,
           onEditingComplete: () => node.unfocus(),
           textInputAction: TextInputAction.done,
-          onSaved: model.onDescriptionSaved,
+          onSaved: (String description) {
+            model.setDescription = description;
+          },
         );
     return Form(
       key: model.formKey,
       child: Column(
         children: [
-          ProductEditorImageRow(),
+          ImageRow(),
           titleField(),
           categoryField(),
           priceField(),

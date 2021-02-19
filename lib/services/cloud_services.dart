@@ -3,6 +3,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 
 import '../models/area.dart';
 import '../models/profile.dart';
+import '../models/product.dart';
 
 class CloudServices {
   static final CloudServices _singleton = CloudServices._();
@@ -39,5 +40,9 @@ class CloudServices {
         .collection('profile')
         .doc(profile.uid)
         .set(Profile.toJson(profile));
+  }
+
+  Future<void> createProduct(Product product) async {
+    await _instance.collection('products').add(Product.toJson(product));
   }
 }

@@ -5,7 +5,7 @@ import '../screens/start/set_area/set_area_range_view.dart';
 import '../screens/start/base/base_view.dart';
 import '../screens/start/profile_editor/profile_editor_view.dart';
 import '../screens/start/login/login_view.dart';
-import '../screens/market/product_editor/product_editor_screen.dart';
+import '../screens/market/product_editor/product_editor_view.dart';
 import '../screens/community/post_editor/post_editor_screen.dart';
 
 class NavigationServices {
@@ -47,7 +47,7 @@ class NavigationServices {
 
   static void toProductEditor(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ProductEditorScreen()),
+      MaterialPageRoute(builder: (context) => ProductEditorView()),
     );
   }
 

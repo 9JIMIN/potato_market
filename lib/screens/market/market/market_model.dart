@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../models/product.dart';
 import '../product_detail/product_detail_model.dart';
 import '../product_detail/product_detail_screen.dart';
-import '../product_editor/product_editor_screen.dart';
+import '../product_editor/product_editor_view.dart';
 import '../product_categories/category_setting_screen.dart';
 
 class MarketModel extends ChangeNotifier {
@@ -63,7 +63,7 @@ class MarketModel extends ChangeNotifier {
   void onFloatPressed(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ProductEditorScreen(),
+        builder: (context) => ProductEditorView(),
       ),
     );
   }

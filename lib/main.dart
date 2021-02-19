@@ -15,6 +15,7 @@ import 'screens/start/set_area/set_area_model.dart';
 import 'screens/start/login/login_model.dart';
 import 'screens/start/start/start_model.dart';
 import 'screens/start/profile_editor/profile_editor_model.dart';
+import 'screens/market/product_editor/product_editor_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +50,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => MarketModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProductEditorModel(),
         ),
       ],
       child: App(),

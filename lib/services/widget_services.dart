@@ -8,6 +8,8 @@ class WidgetServices {
   ) {
     Scaffold.of(context).showSnackBar(
       SnackBar(
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 1),
         content: Text(content),
       ),
     );

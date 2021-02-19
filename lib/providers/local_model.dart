@@ -1,20 +1,22 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:potato_market/models/area.dart';
 
 import '../models/profile.dart';
+import '../models/trade_point.dart';
 
 class LocalModel with ChangeNotifier {
   Box _localBox;
   Map<String, dynamic> _area;
+  Map<String, dynamic> _tradePoint;
   Map<String, dynamic> _profile;
   Map<String, bool> _productCategories;
   Map<String, bool> _workCategories;
 
   Map<String, dynamic> get area => _area;
+  Map<String, dynamic> get tradePoint => _tradePoint;
   Map<String, dynamic> get profile => _profile;
   Map<String, bool> get productCategories => _productCategories;
   Map<String, bool> get workCategories => _workCategories;
@@ -22,6 +24,7 @@ class LocalModel with ChangeNotifier {
   void fetchData() {
     _localBox = Hive.box('localBox');
     fetchArea();
+    fetchTradePoint();
     fetchProfile();
     fetchProductCategories();
     fetchWorkCategories();
@@ -30,10 +33,19 @@ class LocalModel with ChangeNotifier {
   // fetch
   void fetchArea() {
     _area = {
-      'lat': _localBox.get('lat'),
-      'lng': _localBox.get('lng'),
-      'radius': _localBox.get('radius'),
+      'areaLat': _localBox.get('areaLat'),
+      'areaLng': _localBox.get('areaLng'),
+      'areaRadius': _localBox.get('areaRadius'),
       'areaName': _localBox.get('areaName'),
+    };
+  }
+
+  void fetchTradePoint() {
+    _tradePoint = {
+      'tradePointLat': _localBox.get('tradePointLat'),
+      'tradePointLng': _localBox.get('tradePointLng'),
+      'tradePointName': _localBox.get('tradePointName'),
+      'tradePointCount': _localBox.get('tradePointCount'),
     };
   }
 
@@ -64,12 +76,21 @@ class LocalModel with ChangeNotifier {
 
   // update
   void updateArea(Area area) {
-    _localBox.put('lat', area.latitude);
-    _localBox.put('lng', area.longitude);
-    _localBox.put('radius', area.radius);
+    _localBox.put('areaLat', area.latitude);
+    _localBox.put('areaLng', area.longitude);
+    _localBox.put('areaRadius', area.radius);
     _localBox.put('areaName', area.name);
     fetchArea();
-    print('area update ==> ' + _area.toString());
+    log('area update ==> ' + _area.toString());
+  }
+
+  void updateTradePoint(TradePoint tradePoint) {
+    _localBox.put('tradePointLat', tradePoint.point.latitude);
+    _localBox.put('tradePointLng', tradePoint.point.longitude);
+    _localBox.put('tradePointName', tradePoint.name);
+    _localBox.put('tradePointCount', tradePoint.tradeCount);
+    fetchTradePoint();
+    log('tradePoint update => ' + _tradePoint.toString());
   }
 
   void updateProfile(Profile profile) {
@@ -78,24 +99,24 @@ class LocalModel with ChangeNotifier {
     _localBox.put('phoneNumber', profile.phoneNumber);
     _localBox.put('profileImageUrl', profile.imageUrl);
     fetchProfile();
-    print('profile update ==> ' + _profile.toString());
+    log('profile update ==> ' + _profile.toString());
   }
 
   void updateUidAndPhoneNumber(String uid, String phoneNumber) {
     _localBox.put('uid', uid);
     _localBox.put('phoneNumber', phoneNumber);
     fetchProfile();
-    print('uid and phoneNumber update ==>' + _profile.toString());
+    log('uid and phoneNumber update ==>' + _profile.toString());
   }
 
   void updateProductCategories(Map<String, bool> productCategories) {
     _localBox.putAll(productCategories);
-    print('productCategories update ==> ' + _productCategories.toString());
+    log('productCategories update ==> ' + _productCategories.toString());
   }
 
   void updateWorkCategories(Map<String, bool> workCategories) {
     _localBox.putAll(workCategories);
-    print('workCategories update ==> ' + _workCategories.toString());
+    log('workCategories update ==> ' + _workCategories.toString());
   }
 
   // delete

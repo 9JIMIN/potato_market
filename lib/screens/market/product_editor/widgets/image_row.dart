@@ -4,12 +4,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 
 import '../product_editor_model.dart';
 
-class ProductEditorImageRow extends StatefulWidget {
-  @override
-  _ProductEditorImageRowState createState() => _ProductEditorImageRowState();
-}
-
-class _ProductEditorImageRowState extends State<ProductEditorImageRow> {
+class ImageRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<ProductEditorModel>(context, listen: false);
@@ -18,22 +13,23 @@ class _ProductEditorImageRowState extends State<ProductEditorImageRow> {
     );
     return Row(
       children: [
-        InkWell(
-          onTap: model.loadAssets,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 15,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Icon(Icons.photo_camera),
-                Text('${imageAssets.length}/10'),
-              ],
+        GestureDetector(
+          onTap: model.onImageAdded,
+          child: SizedBox(
+            height: 70,
+            width: 70,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.amber,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.photo_camera),
+                  Text('${imageAssets.length}/10'),
+                ],
+              ),
             ),
           ),
         ),
@@ -54,23 +50,30 @@ class _ProductEditorImageRowState extends State<ProductEditorImageRow> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(5),
                         child: AssetThumb(
-                          quality: 10,
+                          quality: 80,
                           asset: asset,
                           width: 70,
                           height: 70,
+                          spinner: SizedBox(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            width: 70,
+                            height: 70,
+                          ),
                         ),
                       ),
                       Positioned(
-                        top: 0,
-                        right: 0,
+                        top: -10,
+                        right: -10,
                         child: GestureDetector(
-                          onTap: () {
-                            model.removeImage(index);
-                          },
                           child: Icon(
                             Icons.cancel,
                             color: Theme.of(context).errorColor,
                           ),
+                          onTap: () {
+                            model.onImageRemoved(index);
+                          },
                         ),
                       ),
                     ],

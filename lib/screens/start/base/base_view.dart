@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/local_model.dart';
-import '../../../services/navigation_services.dart';
-import '../../../screens/start/login/login_view.dart';
 import './widgets/login_dialog.dart';
 import 'base_model.dart';
 
@@ -30,6 +28,8 @@ class _BaseViewState extends State<BaseView> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<BaseModel>(context);
+    final isLogin =
+        Provider.of<LocalModel>(context, listen: false).profile['uid'] != null;
     return Scaffold(
       appBar: model.appbar(),
       body: IndexedStack(
@@ -44,7 +44,7 @@ class _BaseViewState extends State<BaseView> {
         unselectedItemColor: Colors.black,
         currentIndex: model.selectedIndex,
       ),
-      floatingActionButton: model.floatingActionButton(),
+      floatingActionButton: isLogin ? model.floatingActionButton() : null,
     );
   }
 }

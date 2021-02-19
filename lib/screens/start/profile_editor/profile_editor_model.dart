@@ -43,7 +43,10 @@ class ProfileEditorModel with ChangeNotifier {
   }
 
   Future<void> getImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().getImage(source: source);
+    final pickedFile = await ImagePicker().getImage(
+      source: source,
+      imageQuality: 50,
+    );
 
     if (pickedFile != null) {
       _profileImage = File(pickedFile.path);
@@ -87,7 +90,7 @@ class ProfileEditorModel with ChangeNotifier {
     _name = _nameFieldController.text;
     final imageUrl = _profileImage == null
         ? Secrets.defaultUserImageUrl
-        : await StorageServices().storeImage(context, _profileImage);
+        : await StorageServices().storeProfileImage(context, _profileImage);
 
     if (imageUrl != null) {
       final profile = Profile(

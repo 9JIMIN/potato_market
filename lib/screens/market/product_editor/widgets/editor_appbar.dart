@@ -4,8 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../product_editor_model.dart';
 
-class ProductEditorAppbar extends StatelessWidget
-    implements PreferredSizeWidget {
+class EditorAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(60);
   @override
@@ -16,9 +15,8 @@ class ProductEditorAppbar extends StatelessWidget
         FlatButton(
           child: Text('완료'),
           onPressed: () async {
-            await context.read<ProductEditorModel>().addProduct();
-            await context.read<MarketModel>().fetchProducts();
-            Navigator.of(context).pop();
+            Provider.of<ProductEditorModel>(context, listen: false)
+                .onSavePressed();
           },
         )
       ],
