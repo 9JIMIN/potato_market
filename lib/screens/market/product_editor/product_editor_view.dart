@@ -6,6 +6,8 @@ import 'widgets/editor_appbar.dart';
 import 'widgets/editor_form.dart';
 import 'product_editor_model.dart';
 
+import 'dart:developer';
+
 class ProductEditorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,9 @@ class ProductEditorView extends StatelessWidget {
         ),
       ),
       bottomSheet: ListTile(
-        title: Text(model.tradePoint == null ? '거래장소' : model.tradePoint.name),
+        title: Text(
+          model.tradePoint.name == null ? '거래장소' : model.tradePoint.name,
+        ),
         onTap: model.onPositionPressed,
         trailing: Icon(Icons.arrow_drop_down),
       ),

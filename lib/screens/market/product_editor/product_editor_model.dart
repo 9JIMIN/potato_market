@@ -11,14 +11,13 @@ import '../../../secrets.dart';
 import '../../../services/cloud_services.dart';
 import '../../../services/storage_services.dart';
 import '../../../services/widget_services.dart';
-import '../../../providers/local_model.dart';
+import '../../../services/local_model.dart';
+import '../../../services/navigation_services.dart';
 import '../../../models/product.dart';
 import '../../../models/trade_point.dart';
+import '../set_trade_point/set_trade_point_model.dart';
 
 class ProductEditorModel extends ChangeNotifier {
-  ProductEditorModel() {
-    log('에디터 모델 생성');
-  }
   final _formKey = GlobalKey<FormState>();
   List<Asset> _imageAssets = List<Asset>();
   List<String> _categoryList = [
@@ -41,7 +40,7 @@ class ProductEditorModel extends ChangeNotifier {
   String _category;
   String _price;
   String _description;
-  TradePoint _tradePoint;
+  TradePoint _tradePoint = LocalServices().tradePoint;
   bool _isAuction = false;
   bool _isLoading = false;
 
@@ -95,35 +94,15 @@ class ProductEditorModel extends ChangeNotifier {
     );
   }
 
-  void onAuctionPressed() {}
+  // void onAuctionPressed() {}
 
   void onPositionPressed() {
-    final localModel = _formKey.currentContext.read<LocalModel>();
-    showDialog(
-        context: _formKey.currentContext,
-        builder: (_) {
-          final isTradePointExist =
-              localModel.tradePoint['tradePointName'] != null;
-          if (isTradePointExist) {
-            return Dialog(
-              child: ListView(
-                children: [
-                  //
-                ],
-              ),
-            );
-          } else {
-            return Dialog(
-              child: Column(
-                children: [],
-              ),
-            );
-          }
-        });
+    NavigationServices.toSetTradePoint(_formKey.currentContext);
   }
 
   void onSavePressed() async {
     _formKey.currentState.save();
+    log(_title.toString());
     if (_title == null) {
       WidgetServices.showSnack(_formKey.currentContext, '제목을 입력해주세요');
       return;
@@ -148,8 +127,7 @@ class ProductEditorModel extends ChangeNotifier {
     notifyListeners();
     try {
       final createdAt = Timestamp.now();
-      final sellerId =
-          _formKey.currentContext.read<LocalModel>().profile['uid'];
+      final sellerId = LocalServices().profile.uid;
 
       final imageUrls = _imageAssets.isEmpty
           ? [Secrets.defaultProductImageUrl]
@@ -165,10 +143,14 @@ class ProductEditorModel extends ChangeNotifier {
         imageUrls: imageUrls,
         createdAt: createdAt,
         sellerId: sellerId,
-        tradePoint: TradePoint.toJson(_tradePoint),
       );
 
-      await CloudServices().createProduct(newProduct);
+      final tradePoint =
+          _formKey.currentContext.read<SetTradePointModel>().tradePoint;
+
+      final tradePointId = await CloudServices().createTradePoint(tradePoint);
+
+      await CloudServices().createProduct(newProduct, tradePointId);
       // TODO: 마켓 스크린도 업데이트 필요!!
       Navigator.of(_formKey.currentContext).pop();
     } catch (e) {

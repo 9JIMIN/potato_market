@@ -4,6 +4,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import '../models/area.dart';
 import '../models/profile.dart';
 import '../models/product.dart';
+import '../models/trade_point.dart';
 
 class CloudServices {
   static final CloudServices _singleton = CloudServices._();
@@ -15,8 +16,8 @@ class CloudServices {
 
   Future<void> updateArea(Area area, String uid) async {
     GeoFirePoint point = _geo.point(
-      latitude: area.latitude,
-      longitude: area.longitude,
+      latitude: area.lat,
+      longitude: area.lng,
     );
     await _instance.collection('profile').doc(uid).collection('area').add({
       'name': area.name,
@@ -42,7 +43,18 @@ class CloudServices {
         .set(Profile.toJson(profile));
   }
 
-  Future<void> createProduct(Product product) async {
-    await _instance.collection('products').add(Product.toJson(product));
+  Future<void> createProduct(Product product, String id) async {
+    await _instance
+        .collection('tradePoint')
+        .doc(id)
+        .collection('product')
+        .add(Product.toJson(product));
+  }
+
+  Future<String> createTradePoint(TradePoint tradePoint) async {
+    final doc = await _instance
+        .collection('tradePoint')
+        .add(TradePoint.toJson(tradePoint));
+    return doc.id;
   }
 }

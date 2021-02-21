@@ -2,13 +2,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 import '../../../secrets.dart';
 import '../../../services/storage_services.dart';
 import '../../../services/cloud_services.dart';
 import '../../../models/profile.dart';
-import '../../../providers/local_model.dart';
+import '../../../services/local_model.dart';
 import '../../../services/navigation_services.dart';
 
 class ProfileEditorModel with ChangeNotifier {
@@ -94,13 +93,13 @@ class ProfileEditorModel with ChangeNotifier {
 
     if (imageUrl != null) {
       final profile = Profile(
-        uid: context.read<LocalModel>().profile['uid'],
-        phoneNumber: context.read<LocalModel>().profile['phoneNumber'],
+        uid: LocalServices().profile.uid,
+        phoneNumber: LocalServices().profile.phoneNumber,
         imageUrl: imageUrl,
         name: _name,
       );
       await CloudServices().createUser(profile);
-      context.read<LocalModel>().updateProfile(profile);
+      LocalServices().updateProfile(profile);
       NavigationServices.toBase(
           _formKey.currentContext); // formKey로 최신 context를 받을 수 있을까??
     }

@@ -1,21 +1,25 @@
-import 'package:geoflutterfire/geoflutterfire.dart';
-
 class TradePoint {
-  final GeoFirePoint point;
-  final String name;
-  final int tradeCount;
+  final lat;
+  final lng;
+  final name;
+  final tradeCount;
+  final productCount;
 
   TradePoint({
-    this.point,
+    this.lat,
+    this.lng,
     this.name,
     this.tradeCount = 0,
+    this.productCount = 0,
   });
 
-  static Map<String, dynamic> toJson(TradePoint tradePoint) {
+  static Map<String, dynamic> toJson(TradePoint point) {
     return {
-      'point': tradePoint.point,
-      'name': tradePoint.name,
-      'tradeCount': tradePoint.tradeCount,
+      'lat': point.lat,
+      'lng': point.lng,
+      'name': point.name,
+      'tradeCount': point.tradeCount,
+      'productCount': point.productCount,
     };
   }
 }

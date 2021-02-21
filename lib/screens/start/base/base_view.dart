@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../providers/local_model.dart';
+import '../../../services/local_model.dart';
 import './widgets/login_dialog.dart';
 import 'base_model.dart';
 
@@ -14,7 +14,7 @@ class _BaseViewState extends State<BaseView> {
   @override
   void initState() {
     super.initState();
-    var isLogin = context.read<LocalModel>().profile['profileImageUrl'] != null;
+    var isLogin = LocalServices().profile.imageUrl != null;
     if (!isLogin) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await showDialog(
@@ -28,8 +28,7 @@ class _BaseViewState extends State<BaseView> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<BaseModel>(context);
-    final isLogin =
-        Provider.of<LocalModel>(context, listen: false).profile['uid'] != null;
+    final isLogin = LocalServices().profile.uid != null;
     return Scaffold(
       appBar: model.appbar(),
       body: IndexedStack(

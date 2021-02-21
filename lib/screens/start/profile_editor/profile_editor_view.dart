@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'profile_editor_model.dart';
-import '../../../services/navigation_services.dart';
 
 class ProfileEditorView extends StatefulWidget {
   @override

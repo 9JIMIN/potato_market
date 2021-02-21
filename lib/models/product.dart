@@ -12,7 +12,6 @@ class Product {
   final String sellerId;
   final String status;
   final Timestamp createdAt;
-  final Map<String, dynamic> tradePoint;
 
   Product({
     this.title,
@@ -25,7 +24,6 @@ class Product {
     this.likeCount = 0,
     this.sellerId,
     this.status = '판매중',
-    this.tradePoint,
   });
 
   // fromQuery
@@ -33,17 +31,17 @@ class Product {
     return query.docs.map((docsSnapshot) {
       final doc = docsSnapshot.data();
       return Product(
-          title: doc['title'],
-          category: doc['category'],
-          price: doc['price'],
-          description: doc['description'],
-          imageUrls: doc['imageUrls'],
-          chatCount: doc['chatCount'],
-          createdAt: doc['createdAt'],
-          likeCount: doc['likeCount'],
-          sellerId: doc['sellerId'],
-          status: doc['status'],
-          tradePoint: doc['tradePoint']);
+        title: doc['title'],
+        category: doc['category'],
+        price: doc['price'],
+        description: doc['description'],
+        imageUrls: doc['imageUrls'],
+        chatCount: doc['chatCount'],
+        createdAt: doc['createdAt'],
+        likeCount: doc['likeCount'],
+        sellerId: doc['sellerId'],
+        status: doc['status'],
+      );
     }).toList();
   }
 
@@ -58,7 +56,6 @@ class Product {
       'likeCount': product.likeCount,
       'sellerId': product.sellerId,
       'status': product.status,
-      'tradePoint': product.tradePoint,
     };
   }
 }

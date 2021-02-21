@@ -22,7 +22,7 @@ class SetAreaNameView extends StatelessWidget {
                 Text('구역의 이름을 적어주세요.'),
                 FutureBuilder(
                   future: model.onNameFutureBuild(),
-                  builder: (_, snapshot) {
+                  builder: (_, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../services/cloud_services.dart';
 import '../../../services/auth_services.dart';
 import '../../../services/widget_services.dart';
-import '../../../providers/local_model.dart';
+import '../../../services/local_model.dart';
 import '../../../services/navigation_services.dart';
+import '../../../models/profile.dart';
 
 class LoginModel with ChangeNotifier {
   FocusNode _phoneFieldFocus;
@@ -110,13 +110,12 @@ class LoginModel with ChangeNotifier {
       final uid = signInResult;
       final myProfile = await CloudServices().getProfile(uid);
       if (myProfile == null) {
-        _key.currentContext.read<LocalModel>().updateUidAndPhoneNumber(
-              uid,
-              _phoneFieldController.text,
-            );
+        LocalServices().updateProfile(
+          Profile(uid: uid, phoneNumber: _phoneFieldController.text),
+        );
         NavigationServices.toProfileEditor(_key.currentContext);
       } else {
-        _key.currentContext.read<LocalModel>().updateProfile(myProfile);
+        LocalServices().updateProfile(myProfile);
         NavigationServices.toBase(_key.currentContext);
       }
     }

@@ -7,6 +7,9 @@ import '../screens/start/profile_editor/profile_editor_view.dart';
 import '../screens/start/login/login_view.dart';
 import '../screens/market/product_editor/product_editor_view.dart';
 import '../screens/community/post_editor/post_editor_screen.dart';
+import '../screens/market/set_trade_point/add_trade_point_view.dart';
+import '../screens/market/set_trade_point/add_trade_name_view.dart';
+import '../screens/market/set_trade_point/set_trade_point_view.dart';
 
 class NavigationServices {
   static void toSetAreaRange(BuildContext context) {
@@ -54,6 +57,24 @@ class NavigationServices {
   static void toPostEditor(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => PostEditorScreen()),
+    );
+  }
+
+  static void toSetTradePoint(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => SetTradePointView()),
+    );
+  }
+
+  static void toAddTradePoint(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => AddTradePointView()),
+    );
+  }
+
+  static void toAddTradeName(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => AddTradeNameView()),
     );
   }
 }

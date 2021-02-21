@@ -4,11 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import '../../../services/navigation_services.dart';
 import '../../../services/location_services.dart';
-import '../../../providers/local_model.dart';
+import '../../../services/local_model.dart';
 import '../../../models/area.dart';
 import '../../../secrets.dart';
 
@@ -38,7 +37,7 @@ class SetAreaModel with ChangeNotifier {
   // **********
 
   // 1. FutureBuilder
-  Future<void> onRangeFutureBuild(BuildContext context) async {
+  Future<void> onRangeFutureBuild() async {
     _myPosition = await LocationServices.getMyPosition(_key.currentContext);
   }
 
@@ -89,7 +88,7 @@ class SetAreaModel with ChangeNotifier {
       _areaName = name;
     }
     _updateArea();
-    _key.currentContext.read<LocalModel>().updateArea(_newArea);
+    LocalServices().updateArea(_newArea);
 
     NavigationServices.toBase(_key.currentContext);
   }
@@ -130,8 +129,8 @@ class SetAreaModel with ChangeNotifier {
 
   void _updateArea() {
     _newArea = Area(
-      latitude: _areaCenter.latitude,
-      longitude: _areaCenter.longitude,
+      lat: _areaCenter.latitude,
+      lng: _areaCenter.longitude,
       radius: _areaRadius,
       name: _areaName,
       active: true,
