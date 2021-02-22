@@ -43,18 +43,7 @@ class CloudServices {
         .set(Profile.toJson(profile));
   }
 
-  Future<void> createProduct(Product product, String id) async {
-    await _instance
-        .collection('tradePoint')
-        .doc(id)
-        .collection('product')
-        .add(Product.toJson(product));
-  }
-
-  Future<String> createTradePoint(TradePoint tradePoint) async {
-    final doc = await _instance
-        .collection('tradePoint')
-        .add(TradePoint.toJson(tradePoint));
-    return doc.id;
+  Future<void> createProduct(Product product) async {
+    await _instance.collection('product').add(Product.toJson(product));
   }
 }

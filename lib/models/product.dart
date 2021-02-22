@@ -12,6 +12,7 @@ class Product {
   final String sellerId;
   final String status;
   final Timestamp createdAt;
+  final Map<String, dynamic> tradePoint;
 
   Product({
     this.title,
@@ -24,6 +25,7 @@ class Product {
     this.likeCount = 0,
     this.sellerId,
     this.status = '판매중',
+    this.tradePoint,
   });
 
   // fromQuery
@@ -41,6 +43,7 @@ class Product {
         likeCount: doc['likeCount'],
         sellerId: doc['sellerId'],
         status: doc['status'],
+        tradePoint: doc['tradePoint'],
       );
     }).toList();
   }
@@ -56,6 +59,7 @@ class Product {
       'likeCount': product.likeCount,
       'sellerId': product.sellerId,
       'status': product.status,
+      'tradePoint': product.tradePoint,
     };
   }
 }

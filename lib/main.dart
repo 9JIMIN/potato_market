@@ -50,9 +50,6 @@ void main() async {
           create: (_) => MarketModel(),
         ),
         ChangeNotifierProvider(
-          create: (_) => ProductEditorModel(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => SetTradePointModel(),
         ),
       ],

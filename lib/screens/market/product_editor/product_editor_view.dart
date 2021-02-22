@@ -6,33 +6,37 @@ import 'widgets/editor_appbar.dart';
 import 'widgets/editor_form.dart';
 import 'product_editor_model.dart';
 
-import 'dart:developer';
-
 class ProductEditorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<ProductEditorModel>(context, listen: false);
-    final isLoading = context.select(
-      (ProductEditorModel model) => model.isLoading,
-    );
-    return Scaffold(
-      appBar: EditorAppbar(),
-      body: ModalProgressHUD(
-        inAsyncCall: isLoading,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: EditorForm(),
-        ),
-      ),
-      bottomSheet: ListTile(
-        title: Text(
-          model.tradePoint.name == null ? '거래장소' : model.tradePoint.name,
-        ),
-        onTap: model.onPositionPressed,
-        trailing: Icon(Icons.arrow_drop_down),
-      ),
-      // snackbar가 bottomsheet에 가리는 버그때문에 workaround..
-      floatingActionButton: const SizedBox(height: 1),
+    return ChangeNotifierProvider(
+      create: (_) => ProductEditorModel(),
+      builder: (context, child) {
+        final model = Provider.of<ProductEditorModel>(context, listen: false);
+        final isLoading = context.select(
+          (ProductEditorModel model) => model.isLoading,
+        );
+
+        return Scaffold(
+          appBar: EditorAppbar(),
+          body: ModalProgressHUD(
+            inAsyncCall: isLoading,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: EditorForm(),
+            ),
+          ),
+          bottomSheet: ListTile(
+            title: Text(
+              model.tradePoint.name == null ? '거래장소' : model.tradePoint.name,
+            ),
+            onTap: model.onPositionPressed,
+            trailing: Icon(Icons.arrow_drop_down),
+          ),
+          // snackbar가 bottomsheet에 가리는 버그때문에 workaround..
+          floatingActionButton: const SizedBox(height: 1),
+        );
+      },
     );
   }
 }

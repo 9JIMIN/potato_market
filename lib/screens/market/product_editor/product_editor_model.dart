@@ -1,11 +1,8 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 
 import '../../../secrets.dart';
 import '../../../services/cloud_services.dart';
@@ -15,7 +12,6 @@ import '../../../services/local_model.dart';
 import '../../../services/navigation_services.dart';
 import '../../../models/product.dart';
 import '../../../models/trade_point.dart';
-import '../set_trade_point/set_trade_point_model.dart';
 
 class ProductEditorModel extends ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
@@ -41,7 +37,6 @@ class ProductEditorModel extends ChangeNotifier {
   String _price;
   String _description;
   TradePoint _tradePoint = LocalServices().tradePoint;
-  bool _isAuction = false;
   bool _isLoading = false;
 
   void onImageRemoved(int index) {
@@ -66,11 +61,13 @@ class ProductEditorModel extends ChangeNotifier {
       );
       notifyListeners();
     } on Exception catch (e) {
-      WidgetServices.showAlertDialog(
-        _formKey.currentContext,
-        '이미지 선택에러',
-        e.toString(),
-      );
+      if (e.toString() != 'The user has cancelled the selection') {
+        WidgetServices.showAlertDialog(
+          _formKey.currentContext,
+          '이미지 선택에러',
+          e.toString(),
+        );
+      }
     }
   }
 
@@ -94,16 +91,13 @@ class ProductEditorModel extends ChangeNotifier {
     );
   }
 
-  // void onAuctionPressed() {}
-
   void onPositionPressed() {
     NavigationServices.toSetTradePoint(_formKey.currentContext);
   }
 
   void onSavePressed() async {
     _formKey.currentState.save();
-    log(_title.toString());
-    if (_title == null) {
+    if (_title == '') {
       WidgetServices.showSnack(_formKey.currentContext, '제목을 입력해주세요');
       return;
     }
@@ -111,15 +105,15 @@ class ProductEditorModel extends ChangeNotifier {
       WidgetServices.showSnack(_formKey.currentContext, '카테고리를 선택해주세요');
       return;
     }
-    if (_price == null) {
+    if (_price == '') {
       WidgetServices.showSnack(_formKey.currentContext, '가격을 입력해주세요');
       return;
     }
-    if (_description == null) {
+    if (_description == '') {
       WidgetServices.showSnack(_formKey.currentContext, '설명을 입력해주세요');
       return;
     }
-    if (_tradePoint == null) {
+    if (_tradePoint.name == '') {
       WidgetServices.showSnack(_formKey.currentContext, '거래장소를 선택해주세요');
       return;
     }
@@ -135,6 +129,7 @@ class ProductEditorModel extends ChangeNotifier {
               _formKey.currentContext,
               _imageAssets,
             );
+
       final newProduct = Product(
         title: _title,
         category: _category,
@@ -143,15 +138,10 @@ class ProductEditorModel extends ChangeNotifier {
         imageUrls: imageUrls,
         createdAt: createdAt,
         sellerId: sellerId,
+        tradePoint: TradePoint.toJson(_tradePoint),
       );
 
-      final tradePoint =
-          _formKey.currentContext.read<SetTradePointModel>().tradePoint;
-
-      final tradePointId = await CloudServices().createTradePoint(tradePoint);
-
-      await CloudServices().createProduct(newProduct, tradePointId);
-      // TODO: 마켓 스크린도 업데이트 필요!!
+      await CloudServices().createProduct(newProduct);
       Navigator.of(_formKey.currentContext).pop();
     } catch (e) {
       WidgetServices.showAlertDialog(
@@ -170,13 +160,11 @@ class ProductEditorModel extends ChangeNotifier {
   String get description => _description;
   List<Asset> get imageAssets => _imageAssets;
   String get category => _category;
-  bool get isAuction => _isAuction;
   bool get isLoading => _isLoading;
   List<String> get categoryList => _categoryList;
   TradePoint get tradePoint => _tradePoint;
 
   set setTitle(String title) => _title = title;
-  set setCategory(String category) => _category = category;
   set setPrice(String price) => _price = price;
   set setDescription(String description) => _description = description;
 }

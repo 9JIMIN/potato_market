@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:potato_market/screens/market/set_trade_point/set_trade_point_model.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../../services/navigation_services.dart';
+import 'set_trade_point_model.dart';
 
 import 'dart:developer';
 
@@ -11,54 +11,60 @@ class SetTradePointView extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = Provider.of<SetTradePointModel>(context, listen: false);
 
-    Widget bottom() => Positioned(
-          bottom: 0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.amber,
-            ),
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('1'),
-                  ],
-                ),
-                RaisedButton(
-                  child: Text('이 위치에서 거래하기'),
-                  onPressed: () {},
-                )
-              ],
-            ),
-          ),
-        );
-
     return Scaffold(
       appBar: AppBar(
         title: Text('거래장소 선택'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add_location_alt_outlined),
-            onPressed: model.isMapLoading
-                ? null
-                : () {
-                    NavigationServices.toAddTradePoint(context);
-                  },
-          ),
-        ],
       ),
       body: FutureBuilder(
         future: model.onMapFutureBuild(context),
-        builder: (_, AsyncSnapshot snapshot) {
-          log(snapshot.connectionState.toString());
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          final isMoving = context.select(
+            (SetTradePointModel model) => model.isButtonVisible,
+          );
+
+          GoogleMap googleMap() => GoogleMap(
+                mapType: MapType.normal,
+                onMapCreated: (GoogleMapController controller) {
+                  model.setMapController = controller;
+                },
+                initialCameraPosition: CameraPosition(
+                  target: model.initialPosition,
+                  zoom: 12.0,
+                ),
+                onCameraMoveStarted: model.onCameraMoved,
+                onCameraIdle: model.onCameraIdle,
+                myLocationEnabled: true,
+                zoomControlsEnabled: false,
+                tiltGesturesEnabled: false,
+              );
+
+          Widget centerPoint() => Center(
+                child: Icon(Icons.add),
+              );
+
+          Widget pointButton(BuildContext context) => Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RaisedButton(
+                      child: Text('위치 등록하기'),
+                      onPressed: () {
+                        model.onPointButtonPressed(context);
+                      },
+                    ),
+                    SizedBox(
+                      height: 100,
+                    ),
+                  ],
+                ),
+              );
+
           if (snapshot.connectionState == ConnectionState.done) {
             return Stack(
               children: [
-                model.googleMap(),
-                bottom(),
+                googleMap(),
+                centerPoint(),
+                if (isMoving) pointButton(context),
               ],
             );
           }
