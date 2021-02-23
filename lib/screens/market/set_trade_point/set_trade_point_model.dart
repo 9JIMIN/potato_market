@@ -3,18 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:potato_market/services/local_model.dart';
-import 'package:potato_market/services/location_services.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../secrets.dart';
 import '../../../services/navigation_services.dart';
+import '../../../services/location_services.dart';
 import '../../../services/widget_services.dart';
+import '../../../services/local_model.dart';
 import '../../../models/trade_point.dart';
-
-import 'dart:developer';
-import 'package:provider/provider.dart';
-import '../product_editor/product_editor_model.dart';
+import '../../../secrets.dart';
 
 class SetTradePointModel with ChangeNotifier {
   LatLng _initialPosition;
@@ -26,8 +22,6 @@ class SetTradePointModel with ChangeNotifier {
   TextEditingController _nameFieldController = TextEditingController();
 
   Future<void> onMapFutureBuild(BuildContext context) async {
-    // 이것도 별 의미없는 거 같다.
-    // 나중에 없애기
     final lat = LocalServices().tradePoint.lat;
     final lng = LocalServices().tradePoint.lng;
     if (lat == null && lng == null) {
@@ -38,6 +32,7 @@ class SetTradePointModel with ChangeNotifier {
   }
 
   Future<void> onNameFutureBuild() async {
+    _nameFieldController.text = '';
     await _updateAddress();
   }
 
@@ -61,10 +56,12 @@ class SetTradePointModel with ChangeNotifier {
       LocalServices().updateTradePoint(newTradePoint);
       // TODO: 에디터 notifyListener(거래장소 업데이트)
       Navigator.of(_nameFormKey.currentContext).pop();
-      Navigator.of(_nameFormKey.currentContext).pop();
+      dispose();
+      Navigator.of(_nameFormKey.currentContext).pop(newTradePoint);
     }
   }
 
+  // 카메라 관련
   void onCameraMoved() {
     if (_isButtonVisible) {
       _isButtonVisible = false;

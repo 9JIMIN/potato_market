@@ -34,7 +34,7 @@ class _EditorFormState extends State<EditorForm> {
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<ProductEditorModel>(context);
+    final model = Provider.of<ProductEditorModel>(context, listen: false);
     final node = FocusScope.of(context);
     Widget titleField() => TextFormField(
           decoration: InputDecoration(
@@ -83,14 +83,17 @@ class _EditorFormState extends State<EditorForm> {
         );
     return Form(
       key: model.formKey,
-      child: Column(
-        children: [
-          ImageRow(),
-          titleField(),
-          categoryField(),
-          priceField(),
-          descriptionField(),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Column(
+          children: [
+            ImageRow(),
+            titleField(),
+            categoryField(),
+            priceField(),
+            descriptionField(),
+          ],
+        ),
       ),
     );
   }

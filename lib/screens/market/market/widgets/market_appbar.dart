@@ -8,7 +8,7 @@ class MarketAppbar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(60);
   @override
   PreferredSizeWidget build(BuildContext context) {
-    final model = Provider.of<MarketModel>(context);
+    final model = Provider.of<MarketModel>(context, listen: false);
     return AppBar(
       title: Text('products'),
       actions: [

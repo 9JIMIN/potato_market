@@ -10,6 +10,8 @@ import '../screens/community/post_editor/post_editor_screen.dart';
 import '../screens/market/set_trade_point/set_point_name_view.dart';
 import '../screens/market/set_trade_point/set_trade_point_view.dart';
 
+import '../models/trade_point.dart';
+
 class NavigationServices {
   static void toSetAreaRange(BuildContext context) {
     Navigator.pushAndRemoveUntil(
@@ -59,10 +61,14 @@ class NavigationServices {
     );
   }
 
-  static void toSetTradePoint(BuildContext context) {
-    Navigator.of(context).push(
+  static Future<TradePoint> toSetTradePoint(BuildContext context) async {
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => SetTradePointView()),
     );
+    if (result != null) {
+      return result;
+    }
+    return null;
   }
 
   static void toSetPointName(BuildContext context) {

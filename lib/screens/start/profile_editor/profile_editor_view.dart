@@ -29,26 +29,22 @@ class _ProfileEditorViewState extends State<ProfileEditorView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CircleAvatar(
-              radius: 50.0,
-              backgroundColor: Colors.white,
-              child: CircleAvatar(
-                backgroundImage: model.profileImage == null
-                    ? AssetImage('assets/default_user.jpg')
-                    : FileImage(model.profileImage),
-                radius: 50,
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 15.0,
-                    child: IconButton(
-                      icon: Icon(Icons.camera_alt),
-                      iconSize: 15,
-                      color: Colors.grey,
-                      onPressed: () {
-                        model.onCameraButtonPressed(context);
-                      },
-                    ),
+              backgroundImage: model.profileImage == null
+                  ? AssetImage('assets/default_user.jpg')
+                  : FileImage(model.profileImage),
+              radius: 50,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 15.0,
+                  child: IconButton(
+                    icon: Icon(Icons.camera_alt),
+                    iconSize: 15,
+                    color: Colors.grey,
+                    onPressed: () {
+                      model.onCameraButtonPressed(context);
+                    },
                   ),
                 ),
               ),

@@ -6,7 +6,7 @@ class MarketFloatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(onPressed: () {
-      context.read<MarketModel>().onFloatPressed(context);
+      Provider.of<MarketModel>(context, listen: false).onFloatPressed(context);
     });
   }
 }

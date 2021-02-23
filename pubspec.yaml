@@ -28,6 +28,7 @@ dependencies:
   geoflutterfire:
   http:
   intl_phone_number_input:
+  file_picker:
 
 dev_dependencies:
   flutter_test:

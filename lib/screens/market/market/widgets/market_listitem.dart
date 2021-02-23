@@ -32,7 +32,7 @@ class ProductItem extends StatelessWidget {
           ],
         ),
         onTap: () {
-          model.onTileTap(context, i);
+          model.onItemTap(context, i);
         });
   }
 }

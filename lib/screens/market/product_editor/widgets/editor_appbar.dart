@@ -13,8 +13,10 @@ class EditorAppbar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         FlatButton(
           child: Text('완료'),
-          onPressed: Provider.of<ProductEditorModel>(context, listen: false)
-              .onSavePressed,
+          onPressed: Provider.of<ProductEditorModel>(
+            context,
+            listen: false,
+          ).onSavePressed,
         )
       ],
     );

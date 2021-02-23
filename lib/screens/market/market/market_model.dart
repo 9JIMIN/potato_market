@@ -22,7 +22,7 @@ class MarketModel extends ChangeNotifier {
 
   Future<void> fetchProducts() async {
     final QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('products')
+        .collection('product')
         .orderBy('createdAt', descending: true)
         .limit(10)
         .get();
@@ -35,7 +35,7 @@ class MarketModel extends ChangeNotifier {
   Future<void> appendProducts() async {
     _isAppendDone = false;
     final QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('products')
+        .collection('product')
         .orderBy('createdAt', descending: true)
         .where('createdAt', isLessThan: _list.last.createdAt)
         .limit(10)
@@ -47,7 +47,7 @@ class MarketModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onTileTap(BuildContext context, int i) {
+  void onItemTap(BuildContext context, int i) {
     Provider.of<ProductDetailModel>(
       context,
       listen: false,
@@ -60,12 +60,16 @@ class MarketModel extends ChangeNotifier {
     );
   }
 
-  void onFloatPressed(BuildContext context) {
-    Navigator.of(context).push(
+  // 앱바 액션
+  void onFloatPressed(BuildContext context) async {
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ProductEditorView(),
       ),
     );
+    if (result == 'saved') {
+      fetchProducts();
+    }
   }
 
   void onCategoryIconTap(BuildContext context) {
@@ -75,4 +79,6 @@ class MarketModel extends ChangeNotifier {
       ),
     );
   }
+
+  void onSearchPressed(BuildContext context) {}
 }

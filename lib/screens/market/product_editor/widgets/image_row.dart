@@ -7,10 +7,7 @@ import '../product_editor_model.dart';
 class ImageRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<ProductEditorModel>(context, listen: false);
-    final imageAssets = context.select(
-      (ProductEditorModel model) => model.imageAssets,
-    );
+    final model = Provider.of<ProductEditorModel>(context);
     return Row(
       children: [
         GestureDetector(
@@ -27,7 +24,7 @@ class ImageRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.photo_camera),
-                  Text('${imageAssets.length}/10'),
+                  Text('${model.imageAssets.length}/10'),
                 ],
               ),
             ),
@@ -40,8 +37,8 @@ class ImageRow extends StatelessWidget {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: List.generate(imageAssets.length, (index) {
-                Asset asset = imageAssets[index];
+              children: List.generate(model.imageAssets.length, (index) {
+                Asset asset = model.imageAssets[index];
                 return Container(
                   margin: const EdgeInsets.only(right: 15),
                   child: Stack(
@@ -66,12 +63,12 @@ class ImageRow extends StatelessWidget {
                       Positioned(
                         top: -10,
                         right: -10,
-                        child: GestureDetector(
-                          child: Icon(
+                        child: IconButton(
+                          icon: Icon(
                             Icons.cancel,
                             color: Theme.of(context).errorColor,
                           ),
-                          onTap: () {
+                          onPressed: () {
                             model.onImageRemoved(index);
                           },
                         ),

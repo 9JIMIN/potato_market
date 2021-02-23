@@ -10,8 +10,8 @@ class Product {
   final int likeCount;
   final int chatCount;
   final String sellerId;
-  final String status;
   final Timestamp createdAt;
+  final String status;
   final Map<String, dynamic> tradePoint;
 
   Product({
@@ -20,10 +20,10 @@ class Product {
     this.price,
     this.description,
     this.imageUrls,
-    this.chatCount = 0,
-    this.createdAt,
     this.likeCount = 0,
+    this.chatCount = 0,
     this.sellerId,
+    this.createdAt,
     this.status = '판매중',
     this.tradePoint,
   });
@@ -38,10 +38,10 @@ class Product {
         price: doc['price'],
         description: doc['description'],
         imageUrls: doc['imageUrls'],
-        chatCount: doc['chatCount'],
-        createdAt: doc['createdAt'],
         likeCount: doc['likeCount'],
+        chatCount: doc['chatCount'],
         sellerId: doc['sellerId'],
+        createdAt: doc['createdAt'],
         status: doc['status'],
         tradePoint: doc['tradePoint'],
       );
@@ -55,9 +55,10 @@ class Product {
       'price': product.price,
       'description': product.description,
       'imageUrls': product.imageUrls,
-      'chatCount': product.chatCount,
       'likeCount': product.likeCount,
+      'chatCount': product.chatCount,
       'sellerId': product.sellerId,
+      'createdAt': product.createdAt,
       'status': product.status,
       'tradePoint': product.tradePoint,
     };

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'widgets/editor_appbar.dart';
 import 'widgets/editor_form.dart';
+import 'widgets/editor_bottom.dart';
 import 'product_editor_model.dart';
 
 class ProductEditorView extends StatelessWidget {
@@ -12,7 +13,6 @@ class ProductEditorView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ProductEditorModel(),
       builder: (context, child) {
-        final model = Provider.of<ProductEditorModel>(context, listen: false);
         final isLoading = context.select(
           (ProductEditorModel model) => model.isLoading,
         );
@@ -21,20 +21,11 @@ class ProductEditorView extends StatelessWidget {
           appBar: EditorAppbar(),
           body: ModalProgressHUD(
             inAsyncCall: isLoading,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: EditorForm(),
-            ),
+            child: EditorForm(),
           ),
-          bottomSheet: ListTile(
-            title: Text(
-              model.tradePoint.name == null ? '거래장소' : model.tradePoint.name,
-            ),
-            onTap: model.onPositionPressed,
-            trailing: Icon(Icons.arrow_drop_down),
-          ),
-          // snackbar가 bottomsheet에 가리는 버그때문에 workaround..
+          bottomSheet: EditorBottom(),
           floatingActionButton: const SizedBox(height: 1),
+          // snackbar가 bottomsheet에 가리는 버그때문에 workaround..
         );
       },
     );

@@ -46,4 +46,6 @@ class CloudServices {
   Future<void> createProduct(Product product) async {
     await _instance.collection('product').add(Product.toJson(product));
   }
+
+  Future<List<Product>> getProductList() async {}
 }

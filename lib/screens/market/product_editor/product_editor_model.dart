@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -13,7 +14,7 @@ import '../../../services/navigation_services.dart';
 import '../../../models/product.dart';
 import '../../../models/trade_point.dart';
 
-class ProductEditorModel extends ChangeNotifier {
+class ProductEditorModel with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
   List<Asset> _imageAssets = List<Asset>();
   List<String> _categoryList = [
@@ -91,8 +92,13 @@ class ProductEditorModel extends ChangeNotifier {
     );
   }
 
-  void onPositionPressed() {
-    NavigationServices.toSetTradePoint(_formKey.currentContext);
+  void onPositionPressed() async {
+    final tradePoint =
+        await NavigationServices.toSetTradePoint(_formKey.currentContext);
+    if (tradePoint != null) {
+      _tradePoint = tradePoint;
+      notifyListeners();
+    }
   }
 
   void onSavePressed() async {
@@ -142,7 +148,7 @@ class ProductEditorModel extends ChangeNotifier {
       );
 
       await CloudServices().createProduct(newProduct);
-      Navigator.of(_formKey.currentContext).pop();
+      Navigator.of(_formKey.currentContext).pop('saved');
     } catch (e) {
       WidgetServices.showAlertDialog(
         _formKey.currentContext,
