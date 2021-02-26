@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import '../market_model.dart';
 import 'product_item.dart';
 
+import '../../../../services/local_model.dart';
+
 class MarketListView extends StatefulWidget {
   @override
   _MarketListViewState createState() => _MarketListViewState();
@@ -40,6 +42,7 @@ class _MarketListViewState extends State<MarketListView> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<MarketModel>(context);
+    log(LocalServices().area.radius.toString());
     return Builder(
       builder: (context) => model.list.isEmpty
           ? Center(

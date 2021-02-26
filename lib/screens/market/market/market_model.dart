@@ -8,25 +8,27 @@ import '../product_detail/product_detail_model.dart';
 import '../product_detail/product_detail_screen.dart';
 import '../product_editor/product_editor_view.dart';
 import '../product_categories/category_setting_screen.dart';
+import '../../../services/local_model.dart';
+
+import '../../../services/cloud_services.dart';
 
 class MarketModel extends ChangeNotifier {
   MarketModel() {
     fetchProducts();
-  } // Market모델 인스턴스가 생성될 때, 실행됨.
+  }
 
   List<Product> _list = List<Product>();
-  List<Product> get list => _list;
-
   bool _isAppendDone = true;
-  bool get isAppendDone => _isAppendDone;
 
+  // product 업데이트
   Future<void> fetchProducts() async {
+    // final QuerySnapshot query =
+    // await CloudServices().getProductList();
     final QuerySnapshot query = await FirebaseFirestore.instance
         .collection('product')
         .orderBy('createdAt', descending: true)
         .limit(10)
         .get();
-
     final List<Product> productList = Product.fromQuery(query);
     _list = productList;
     notifyListeners();
@@ -47,6 +49,7 @@ class MarketModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // product 선택
   void onItemTap(BuildContext context, int i) {
     Provider.of<ProductDetailModel>(
       context,
@@ -61,6 +64,17 @@ class MarketModel extends ChangeNotifier {
   }
 
   // 앱바 액션
+  void onCategoryIconTap(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CategorySettingScreen(),
+      ),
+    );
+  }
+
+  void onSearchPressed(BuildContext context) {}
+
+  // 에디터 버튼
   void onFloatPressed(BuildContext context) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
@@ -72,13 +86,6 @@ class MarketModel extends ChangeNotifier {
     }
   }
 
-  void onCategoryIconTap(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CategorySettingScreen(),
-      ),
-    );
-  }
-
-  void onSearchPressed(BuildContext context) {}
+  bool get isAppendDone => _isAppendDone;
+  List<Product> get list => _list;
 }

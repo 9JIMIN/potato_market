@@ -5,6 +5,9 @@ import '../models/area.dart';
 import '../models/profile.dart';
 import '../models/product.dart';
 import '../models/trade_point.dart';
+import 'local_model.dart';
+
+import 'dart:developer';
 
 class CloudServices {
   static final CloudServices _singleton = CloudServices._();
@@ -47,5 +50,20 @@ class CloudServices {
     await _instance.collection('product').add(Product.toJson(product));
   }
 
-  Future<List<Product>> getProductList() async {}
+  Future<List<Product>> getProductList() async {
+    final area = LocalServices().area;
+    final center = _geo.point(latitude: area.lat, longitude: area.lng);
+    final radius = area.radius;
+
+    final list =
+        _geo.collection(collectionRef: _instance.collection('product')).within(
+              center: center,
+              radius: radius,
+              field: 'tradePoint.point',
+            );
+    final a = await list.first;
+    final b = a.first.data();
+    log(b.toString());
+    return null;
+  }
 }
