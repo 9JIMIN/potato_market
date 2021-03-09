@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/local_model.dart';
+import '../../../services/local_services.dart';
 
 class CommunityBody extends StatelessWidget {
   @override

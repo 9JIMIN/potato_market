@@ -7,15 +7,11 @@ import 'package:provider/provider.dart';
 import 'screens/start/splash/splash_view.dart';
 
 // provider
-import 'services/local_model.dart';
 import 'screens/market/market/market_model.dart';
 import 'screens/start/base/base_model.dart';
-import 'screens/start/splash/splash_model.dart';
 import 'screens/start/set_area/set_area_model.dart';
 import 'screens/start/login/login_model.dart';
-import 'screens/start/start/start_model.dart';
 import 'screens/start/profile_editor/profile_editor_model.dart';
-import 'screens/market/product_editor/product_editor_model.dart';
 import 'screens/market/set_trade_point/set_trade_point_model.dart';
 
 void main() async {
@@ -28,12 +24,6 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => SplashModel(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => StartModel(),
-        ),
         ChangeNotifierProvider(
           create: (_) => SetAreaModel(),
         ),

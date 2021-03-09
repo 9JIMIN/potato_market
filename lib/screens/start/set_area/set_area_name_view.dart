@@ -35,18 +35,21 @@ class SetAreaNameView extends StatelessWidget {
                               }),
                           Text('중심 주소: ${model.fullAddress}'),
                           Text('반지름 크기: ${model.areaRadius / 1000} km'),
+                          Align(
+                            alignment: Alignment.center,
+                            child: RaisedButton(
+                              child: Text('등록하기'),
+                              onPressed: () {
+                                formKey.currentState.save();
+                              },
+                            ),
+                          ),
                         ],
                       );
                     }
                     return Center(
                       child: CircularProgressIndicator(),
                     );
-                  },
-                ),
-                RaisedButton(
-                  child: Text('등록하기'),
-                  onPressed: () {
-                    formKey.currentState.save();
                   },
                 ),
               ],

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../services/cloud_services.dart';
 import '../../../services/auth_services.dart';
-import '../../../services/widget_services.dart';
-import '../../../services/local_model.dart';
+import '../../../widgets/widget_services.dart';
+import '../../../services/local_services.dart';
 import '../../../services/navigation_services.dart';
 import '../../../models/profile.dart';
 

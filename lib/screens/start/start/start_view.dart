@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'start_model.dart';
+import '../../../services/navigation_services.dart';
 
 class StartView extends StatelessWidget {
+  final imagePath = 'assets/start_image.jpg';
+
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<StartModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Welcome to 감자마켓'),
@@ -15,7 +15,7 @@ class StartView extends StatelessWidget {
         child: RaisedButton(
           child: Text('시작!'),
           onPressed: () {
-            model.onStartPressed(context);
+            NavigationServices.toSetAreaRange(context);
           },
         ),
       ),

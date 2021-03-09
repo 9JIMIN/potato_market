@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../login_model.dart';
 
 class LoginGuide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<LoginModel>(context, listen: false);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

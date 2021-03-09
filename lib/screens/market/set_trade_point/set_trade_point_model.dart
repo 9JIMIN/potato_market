@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 
 import '../../../services/navigation_services.dart';
 import '../../../services/location_services.dart';
-import '../../../services/widget_services.dart';
-import '../../../services/local_model.dart';
+import '../../../widgets/widget_services.dart';
+import '../../../services/local_services.dart';
 import '../../../models/trade_point.dart';
 import '../../../secrets.dart';
 

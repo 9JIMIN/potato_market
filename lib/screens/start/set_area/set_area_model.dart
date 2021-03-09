@@ -1,15 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../services/navigation_services.dart';
 import '../../../services/location_services.dart';
-import '../../../services/local_model.dart';
+import '../../../services/local_services.dart';
 import '../../../models/area.dart';
-import '../../../secrets.dart';
 
 class SetAreaModel with ChangeNotifier {
   LatLng _myPosition;
@@ -37,12 +33,14 @@ class SetAreaModel with ChangeNotifier {
   // **********
 
   // 1. FutureBuilder
-  Future<void> onRangeFutureBuild() async {
-    _myPosition = await LocationServices.getMyPosition(_key.currentContext);
+  Future<void> onRangeFutureBuild(context) async {
+    _myPosition = await LocationServices.getMyPosition(context);
   }
 
   Future<void> onNameFutureBuild() async {
-    await _updateAreaName();
+    final result = await LocationServices.getAddress(_areaCenter);
+    _fullAddress = result['full'];
+    _areaName = result['short'];
   }
 
   // 2. 카메라 움직일 때
@@ -89,7 +87,6 @@ class SetAreaModel with ChangeNotifier {
     }
     _updateArea();
     LocalServices().updateArea(_newArea);
-
     NavigationServices.toBase(_key.currentContext);
   }
 
@@ -102,9 +99,9 @@ class SetAreaModel with ChangeNotifier {
   }
 
   Future<void> _updateAreaCenter() async {
-    var pixelRatio = MediaQuery.of(_key.currentContext).devicePixelRatio;
-    var mediaSize = MediaQuery.of(_key.currentContext).size;
-    var appbarHeight = Scaffold.of(_key.currentContext).appBarMaxHeight;
+    final pixelRatio = MediaQuery.of(_key.currentContext).devicePixelRatio;
+    final mediaSize = MediaQuery.of(_key.currentContext).size;
+    final appbarHeight = Scaffold.of(_key.currentContext).appBarMaxHeight;
 
     _areaCenter = await _mapController.getLatLng(
       ScreenCoordinate(
@@ -112,19 +109,6 @@ class SetAreaModel with ChangeNotifier {
         y: ((mediaSize.height - appbarHeight) * pixelRatio / 2).round(),
       ),
     );
-  }
-
-  Future<void> _updateAreaName() async {
-    var url = 'https://maps.googleapis.com/maps/api/geocode/json';
-    var lat = _areaCenter.latitude;
-    var lng = _areaCenter.longitude;
-    var requestUrl =
-        '$url?latlng=$lat,$lng&key=${Secrets.googleAPI}&language=ko';
-
-    var response = await http.get(requestUrl);
-    Map<String, dynamic> res = jsonDecode(response.body)['results'][0];
-    _fullAddress = res['formatted_address'];
-    _areaName = res['address_components'][1]['short_name'];
   }
 
   void _updateArea() {

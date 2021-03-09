@@ -13,7 +13,7 @@ class SetAreaRangeView extends StatelessWidget {
         title: Text('범위 정하기'),
       ),
       body: FutureBuilder(
-        future: model.onRangeFutureBuild(),
+        future: model.onRangeFutureBuild(context),
         builder: (_, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return SetAreaStack();

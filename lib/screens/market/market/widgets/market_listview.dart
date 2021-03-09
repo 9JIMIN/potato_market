@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../market_model.dart';
 import 'product_item.dart';
 
-import '../../../../services/local_model.dart';
+import '../../../../services/local_services.dart';
 
 class MarketListView extends StatefulWidget {
   @override

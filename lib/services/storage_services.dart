@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
-import 'widget_services.dart';
+import '../widgets/widget_services.dart';
 
 class StorageServices {
   static final StorageServices _singleton = StorageServices._();

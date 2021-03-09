@@ -8,9 +8,8 @@ import '../product_detail/product_detail_model.dart';
 import '../product_detail/product_detail_screen.dart';
 import '../product_editor/product_editor_view.dart';
 import '../product_categories/category_setting_screen.dart';
-import '../../../services/local_model.dart';
 
-import '../../../services/cloud_services.dart';
+import '../../../services/local_services.dart';
 
 class MarketModel extends ChangeNotifier {
   MarketModel() {
@@ -22,8 +21,7 @@ class MarketModel extends ChangeNotifier {
 
   // product 업데이트
   Future<void> fetchProducts() async {
-    // final QuerySnapshot query =
-    // await CloudServices().getProductList();
+    print(LocalServices().area.name);
     final QuerySnapshot query = await FirebaseFirestore.instance
         .collection('product')
         .orderBy('createdAt', descending: true)

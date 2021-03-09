@@ -5,7 +5,7 @@ import '../models/area.dart';
 import '../models/profile.dart';
 import '../models/product.dart';
 import '../models/trade_point.dart';
-import 'local_model.dart';
+import 'local_services.dart';
 
 import 'dart:developer';
 

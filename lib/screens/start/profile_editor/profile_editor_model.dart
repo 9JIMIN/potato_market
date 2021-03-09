@@ -7,7 +7,7 @@ import '../../../secrets.dart';
 import '../../../services/storage_services.dart';
 import '../../../services/cloud_services.dart';
 import '../../../models/profile.dart';
-import '../../../services/local_model.dart';
+import '../../../services/local_services.dart';
 import '../../../services/navigation_services.dart';
 
 class ProfileEditorModel with ChangeNotifier {

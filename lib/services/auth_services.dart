@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
 
-import 'widget_services.dart';
+import '../widgets/widget_services.dart';
 
 class AuthServices {
   static final AuthServices _singleton = AuthServices._();
