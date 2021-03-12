@@ -16,7 +16,7 @@ class SetAreaModel with ChangeNotifier {
   var _circles = Set<Circle>();
 
   LatLng _areaCenter;
-  double _areaRadius = 5000;
+  double _areaRadius = 10000;
   String _areaName;
 
   int _pointCount;

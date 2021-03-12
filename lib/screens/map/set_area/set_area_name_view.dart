@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../start/set_area/set_area_model.dart';
+import '../set_area/set_area_model.dart';
 
 class SetAreaNameView extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
@@ -34,10 +34,11 @@ class SetAreaNameView extends StatelessWidget {
                                 model.onSavePressed(name);
                               }),
                           Text('중심 주소: ${model.fullAddress}'),
-                          Text('반지름 크기: ${model.areaRadius / 1000} km'),
+                          Text(
+                              '반지름 크기: ${(model.areaRadius / 1000).floor()} km'),
                           Align(
                             alignment: Alignment.center,
-                            child: RaisedButton(
+                            child: ElevatedButton(
                               child: Text('등록하기'),
                               onPressed: () {
                                 formKey.currentState.save();

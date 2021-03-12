@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:potato_market/models/area.dart';
 

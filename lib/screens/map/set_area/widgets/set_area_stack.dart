@@ -18,7 +18,7 @@ class SetAreaStack extends StatelessWidget {
           },
           initialCameraPosition: CameraPosition(
             target: model.myPosition,
-            zoom: 12.0,
+            zoom: 11.0,
           ),
           myLocationEnabled: true,
           zoomControlsEnabled: false,
@@ -28,11 +28,7 @@ class SetAreaStack extends StatelessWidget {
         );
 
     Widget centerPoint() => Center(
-          child: Stack(
-            children: [
-              Icon(Icons.add_circle_outline),
-            ],
-          ),
+          child: Icon(Icons.add_circle_outline),
         );
 
     Widget bottom() => Positioned(
@@ -53,11 +49,12 @@ class SetAreaStack extends StatelessWidget {
                       value: model.areaRadius,
                       onChanged: model.onSliderMove,
                       min: 1000,
-                      max: 20000,
-                      divisions: 10,
-                      label: model.areaRadius.toString(),
+                      max: 30000,
+                      divisions: 29,
+                      label:
+                          (model.areaRadius / 1000).floor().toString() + 'km',
                     ),
-                    Text('반지름: ${model.areaRadius / 1000} km'),
+                    Text('반지름: ${(model.areaRadius / 1000).floor()} km'),
                     Text(model.isRangeLoading
                         ? '전일 거래량: ...'
                         : '전일 거래량: ${model.pointCount} 건'),
@@ -66,7 +63,7 @@ class SetAreaStack extends StatelessWidget {
                         : '현재 매물수: ${model.productCount * 10} 개'),
                   ],
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: model.onNextPressed,
                   child: Text('범위 등록하기'),
                 ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../screens/start/set_area/set_area_name_view.dart';
-import '../screens/start/set_area/set_area_range_view.dart';
-import '../screens/start/base/base_view.dart';
-import '../screens/start/profile_editor/profile_editor_view.dart';
-import '../screens/start/login/login_view.dart';
+import '../screens/init/base/base_view.dart';
+import '../screens/map/set_area/set_area_name_view.dart';
+import '../screens/map/set_area/set_area_range_view.dart';
+import '../screens/map/set_trade_point/set_point_name_view.dart';
+import '../screens/map/set_trade_point/set_trade_point_view.dart';
+import '../screens/profile/profile_editor/profile_editor_view.dart';
+import '../screens/profile/login/login_view.dart';
 import '../screens/market/product_editor/product_editor_view.dart';
 import '../screens/community/post_editor/post_editor_screen.dart';
-import '../screens/market/set_trade_point/set_point_name_view.dart';
-import '../screens/market/set_trade_point/set_trade_point_view.dart';
 
 import '../models/trade_point.dart';
 

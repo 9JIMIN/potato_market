@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:potato_market/screens/start/login/widgets/login_form.dart';
-import 'package:potato_market/screens/start/login/widgets/login_guide.dart';
+import 'package:potato_market/screens/profile/login/widgets/login_form.dart';
+import 'package:potato_market/screens/profile/login/widgets/login_guide.dart';
 import 'package:provider/provider.dart';
 
 import 'login_model.dart';

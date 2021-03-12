@@ -12,7 +12,7 @@ class StartView extends StatelessWidget {
         title: Text('Welcome to 감자마켓'),
       ),
       body: Center(
-        child: RaisedButton(
+        child: ElevatedButton(
           child: Text('시작!'),
           onPressed: () {
             NavigationServices.toSetAreaRange(context);
