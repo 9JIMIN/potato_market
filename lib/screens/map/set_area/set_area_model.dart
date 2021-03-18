@@ -87,7 +87,7 @@ class SetAreaModel with ChangeNotifier {
     }
     _updateArea();
     LocalServices().updateArea(_newArea);
-    NavigationServices.toBase(_key.currentContext);
+    NavigationServices.toLogin(_key.currentContext);
   }
 
   Future<void> _updateCount() async {

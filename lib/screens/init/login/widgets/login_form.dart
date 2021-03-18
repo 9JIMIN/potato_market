@@ -42,11 +42,9 @@ class _LoginFormState extends State<LoginForm> {
           ),
         );
 
-    Widget sendButton() => RaisedButton(
+    Widget sendButton() => ElevatedButton(
           child: Text(model.isSendButtonPressed ? '인증번호 다시받기' : '인증번호 받기'),
           onPressed: isSendButtonActive ? model.onSendButtonPressed : null,
-          color: Colors.amber,
-          disabledColor: Colors.grey,
         );
 
     Widget certField() => TextFormField(
@@ -66,16 +64,14 @@ class _LoginFormState extends State<LoginForm> {
           ),
         );
 
-    Widget termsButton() => FlatButton(
+    Widget termsButton() => TextButton(
           child: Text('이용약관 및 개인정보취급방침'),
           onPressed: () {},
         );
 
-    Widget startButton() => RaisedButton(
+    Widget startButton() => ElevatedButton(
           child: Text('동의하고 시작하기'),
           onPressed: isStartButtonActive ? model.onStartButtonPressed : null,
-          color: Colors.amber,
-          disabledColor: Colors.grey,
         );
 
     return Form(

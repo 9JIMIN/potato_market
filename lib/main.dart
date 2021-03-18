@@ -10,8 +10,8 @@ import 'screens/init/splash/splash_view.dart';
 import 'screens/init/base/base_model.dart';
 import 'screens/map/set_trade_point/set_trade_point_model.dart';
 import 'screens/map/set_area/set_area_model.dart';
-import 'screens/profile/login/login_model.dart';
-import 'screens/profile/profile_editor/profile_editor_model.dart';
+import 'screens/init/login/login_model.dart';
+import 'screens/account/profile_editor/profile_editor_model.dart';
 import 'screens/market/market/market_model.dart';
 
 void main() async {

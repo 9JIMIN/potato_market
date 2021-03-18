@@ -9,13 +9,13 @@ class LoginDialog extends StatelessWidget {
       title: Text('로그인 하시겠습니까?'),
       content: Text('로그인 없이도 이용은 가능합니다.'),
       actions: [
-        FlatButton(
+        TextButton(
           child: Text('취소'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text('로그인 하기'),
           onPressed: () {
             NavigationServices.toLogin(context);

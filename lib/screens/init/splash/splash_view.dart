@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 import '../../../services/local_services.dart';
-import '../start/start_view.dart';
+import '../login/login_view.dart';
 import '../base/base_view.dart';
 
 class SplashView extends StatelessWidget {
   final _imagePath = 'assets/splash_image.jpg';
+
   Future<Widget> _afterSplash(BuildContext context) async {
+    // splash 대기시간
     await Future.delayed(Duration(seconds: 1));
+    // 로컬 데이터 가져오기, 확인
     LocalServices().fetchData();
-    if (LocalServices().area.name == null) {
-      return StartView();
+    if (LocalServices().profile.uid == null) {
+      return LoginView();
     } else {
       return BaseView();
     }

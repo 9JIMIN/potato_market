@@ -11,10 +11,12 @@ class BaseView extends StatefulWidget {
 }
 
 class _BaseViewState extends State<BaseView> {
+  var isLogin;
+
   @override
   void initState() {
     super.initState();
-    var isLogin = LocalServices().profile.imageUrl != null;
+    isLogin = LocalServices().profile.uid != null;
     if (!isLogin) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await showDialog(
@@ -28,7 +30,6 @@ class _BaseViewState extends State<BaseView> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<BaseModel>(context);
-    final isLogin = LocalServices().profile.uid != null;
     return Scaffold(
       appBar: model.appbar(),
       body: IndexedStack(
