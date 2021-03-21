@@ -70,7 +70,8 @@ class LoginModel with ChangeNotifier {
 
   // 인증번호 보내기 버튼 클릭시
   void onSendButtonPressed() async {
-    if (_phoneFieldController.text.startsWith('01')) {
+    final phoneText = _phoneFieldController.text;
+    if (phoneText.startsWith('01')) {
       WidgetServices.showSnack(key.currentContext, '인증번호를 전송하였습니다.(최대 30초 소요)');
       _phoneFieldFocus.unfocus();
 
@@ -81,7 +82,7 @@ class LoginModel with ChangeNotifier {
 
       await AuthServices().sendCertSMS(
         _key.currentContext,
-        _phoneFieldController.text,
+        phoneText,
         _setCertText,
         _setVerificationId,
       );
@@ -103,19 +104,24 @@ class LoginModel with ChangeNotifier {
     );
 
     if (signInResult == null) {
-      _key.currentState.validate();
-      await Future.delayed(Duration(seconds: 3));
-      _key.currentState.reset();
+      WidgetServices.showSnack(_key.currentContext, '인증번호가 일치하지 않습니다.');
     } else {
       final uid = signInResult;
       final myProfile = await CloudServices().getProfile(uid);
+      final local = LocalServices();
+      LocalServices().updateProfile(
+        Profile(uid: uid, phoneNumber: _phoneFieldController.text),
+      );
+      // 계정이 없는 경우
       if (myProfile == null) {
-        LocalServices().updateProfile(
-          Profile(uid: uid, phoneNumber: _phoneFieldController.text),
-        );
         NavigationServices.toProfileEditor(_key.currentContext);
-      } else {
-        LocalServices().updateProfile(myProfile);
+      }
+      // 구역정보가 없는 경우
+      else if (local.area.name == null) {
+        NavigationServices.toSetAreaRange(_key.currentContext);
+      }
+      // 계정, 구역정보 모두 있는 경우
+      else {
         NavigationServices.toBase(_key.currentContext);
       }
     }
