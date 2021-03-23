@@ -4,7 +4,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import '../models/area.dart';
 import '../models/profile.dart';
 import '../models/product.dart';
-import '../models/trade_point.dart';
 import 'local_services.dart';
 
 import 'dart:developer';
@@ -17,7 +16,7 @@ class CloudServices {
   final _geo = Geoflutterfire();
   final _instance = FirebaseFirestore.instance;
 
-  Future<void> updateArea(Area area, String uid) async {
+  Future<void> addArea(Area area, String uid) async {
     GeoFirePoint point = _geo.point(
       latitude: area.lat,
       longitude: area.lng,
@@ -31,9 +30,24 @@ class CloudServices {
   }
 
   Future<Profile> getProfile(String uid) async {
-    var docs = await _instance.collection('profile').doc(uid).get();
+    final docs = await _instance.collection('profile').doc(uid).get();
     if (docs.exists) {
       return Profile.fromQuery(docs);
+    } else {
+      return null;
+    }
+  }
+
+  Future<Area> getActiveArea(String uid) async {
+    final query = await _instance
+        .collection('profile')
+        .doc(uid)
+        .collection('area')
+        .where('active', isEqualTo: true)
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      return Area.fromQuery(query.docs.first);
     } else {
       return null;
     }

@@ -21,7 +21,7 @@ class _ProfileEditorViewState extends State<ProfileEditorView> {
     return Scaffold(
       key: model.testkey,
       appBar: AppBar(
-        title: Text('프로필 입력'),
+        title: Text('프로필 편집'),
       ),
       body: Padding(
         padding: EdgeInsets.only(top: 50, left: 50, right: 50),

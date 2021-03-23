@@ -22,13 +22,14 @@ class LocalServices {
   Map<String, bool> get productCategories => _productCategories;
   Map<String, bool> get workCategories => _workCategories;
 
-  void fetchData() {
+  LocalServices fetchData() {
     _localBox = Hive.box('localBox');
     fetchArea();
     fetchTradePoint();
     fetchProfile();
     fetchProductCategories();
     fetchWorkCategories();
+    return this;
   }
 
   // fetch

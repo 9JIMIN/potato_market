@@ -6,7 +6,7 @@ class WidgetServices {
     BuildContext context,
     String content,
   ) {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
         duration: Duration(seconds: 1),
@@ -26,7 +26,7 @@ class WidgetServices {
         title: Text(title),
         content: Text(content),
         actions: [
-          FlatButton(
+          TextButton(
             child: Text('확인'),
             onPressed: Navigator.of(context).pop,
           )
@@ -41,7 +41,7 @@ class WidgetServices {
         builder: (_) => AlertDialog(
           content: Text('위치 권한이 없으면 감자마켓 서비스를 이용하실 수 없습니다.'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text('확인'),
               onPressed: Navigator.of(context).pop,
             )
@@ -54,11 +54,11 @@ class WidgetServices {
         builder: (_) => AlertDialog(
           content: Text('위치 권한이 꺼져있습니다. \n[권한] 설정에서 위치 권한을 허용햐야 합니다.'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text('취소'),
               onPressed: Navigator.of(context).pop,
             ),
-            FlatButton(
+            TextButton(
               child: Text('설정으로 가기'),
               onPressed: () async {
                 await Geolocator.openAppSettings();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:potato_market/screens/map/set_area/set_area_range_view.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 import '../../../services/local_services.dart';
@@ -6,15 +7,16 @@ import '../login/login_view.dart';
 import '../base/base_view.dart';
 
 class SplashView extends StatelessWidget {
-  final _imagePath = 'assets/splash_image.jpg';
+  final _splashImage = 'assets/splash_image.jpg';
 
   Future<Widget> _afterSplash(BuildContext context) async {
-    // splash 대기시간
     await Future.delayed(Duration(seconds: 1));
-    // 로컬 데이터 가져오기, 확인
-    LocalServices().fetchData();
-    if (LocalServices().profile.uid == null) {
+
+    final local = LocalServices().fetchData();
+    if (local.profile.imageUrl == null) {
       return LoginView();
+    } else if (local.area.name == null) {
+      return SetAreaRangeView();
     } else {
       return BaseView();
     }
@@ -25,7 +27,7 @@ class SplashView extends StatelessWidget {
     return SplashScreen(
       navigateAfterFuture: _afterSplash(context),
       image: Image.asset(
-        _imagePath,
+        _splashImage,
         fit: BoxFit.contain,
       ),
       photoSize: 200,

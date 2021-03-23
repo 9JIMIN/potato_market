@@ -54,17 +54,14 @@ class LoginModel with ChangeNotifier {
     }
   }
 
-  String certFieldValidator(String certInput) {
-    return '인증번호가 일치하지 않습니다.';
-  }
-
+  // SMS보내기 함수에 보낼 함수
   void _setCertText(PhoneAuthCredential credential) {
     _certFieldController.text = credential.smsCode;
     _isStartButtonActive = true;
     notifyListeners();
   }
 
-  void _setVerificationId(String verificationId, int resendToken) {
+  void _setVerificationId(String verificationId, _) {
     _verificationId = verificationId;
   }
 
@@ -97,33 +94,37 @@ class LoginModel with ChangeNotifier {
     _certFieldFocus.unfocus();
     notifyListeners();
 
-    final signInResult = await AuthServices().signIn(
+    final uid = await AuthServices().signIn(
       _key.currentContext,
       _verificationId,
       _certFieldController.text,
     );
 
-    if (signInResult == null) {
+    if (uid == null) {
+      // 인증실패
       WidgetServices.showSnack(_key.currentContext, '인증번호가 일치하지 않습니다.');
+      _isLoading = false;
+      notifyListeners();
     } else {
-      final uid = signInResult;
-      final myProfile = await CloudServices().getProfile(uid);
+      // 인증성공
       final local = LocalServices();
-      LocalServices().updateProfile(
-        Profile(uid: uid, phoneNumber: _phoneFieldController.text),
-      );
-      // 계정이 없는 경우
+      final myProfile = await CloudServices().getProfile(uid);
       if (myProfile == null) {
+        local.updateProfile(
+          Profile(uid: uid, phoneNumber: _phoneFieldController.text),
+        );
         NavigationServices.toProfileEditor(_key.currentContext);
+      } else {
+        local.updateProfile(myProfile);
+        final activeArea = await CloudServices().getActiveArea(uid);
+        if (activeArea == null) {
+          NavigationServices.toSetAreaRange(_key.currentContext);
+        } else {
+          local.updateArea(activeArea);
+          NavigationServices.toBase(_key.currentContext);
+        }
       }
-      // 구역정보가 없는 경우
-      else if (local.area.name == null) {
-        NavigationServices.toSetAreaRange(_key.currentContext);
-      }
-      // 계정, 구역정보 모두 있는 경우
-      else {
-        NavigationServices.toBase(_key.currentContext);
-      }
+      _isLoading = false;
     }
   }
 

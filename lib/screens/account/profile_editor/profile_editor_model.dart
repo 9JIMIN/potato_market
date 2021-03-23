@@ -91,18 +91,15 @@ class ProfileEditorModel with ChangeNotifier {
         ? Secrets.defaultUserImageUrl
         : await StorageServices().storeProfileImage(context, _profileImage);
 
-    if (imageUrl != null) {
-      final profile = Profile(
-        uid: LocalServices().profile.uid,
-        phoneNumber: LocalServices().profile.phoneNumber,
-        imageUrl: imageUrl,
-        name: _name,
-      );
-      await CloudServices().createUser(profile);
-      LocalServices().updateProfile(profile);
-      NavigationServices.toBase(
-          _formKey.currentContext); // formKey로 최신 context를 받을 수 있을까??
-    }
+    final profile = Profile(
+      uid: LocalServices().profile.uid,
+      phoneNumber: LocalServices().profile.phoneNumber,
+      imageUrl: imageUrl,
+      name: _name,
+    );
+    await CloudServices().createUser(profile);
+    LocalServices().updateProfile(profile);
+    NavigationServices.toSetAreaRange(_formKey.currentContext);
   }
 
   GlobalKey get formKey => _formKey;

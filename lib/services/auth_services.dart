@@ -42,6 +42,7 @@ class AuthServices {
       final uid = (await _instance.signInWithCredential(credential)).user.uid;
       return uid;
     } on FirebaseAuthException catch (e) {
+      // TODO: 에러 처리하기
       log(e.toString());
       return null;
     } catch (e) {

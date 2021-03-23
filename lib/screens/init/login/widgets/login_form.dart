@@ -25,6 +25,9 @@ class _LoginFormState extends State<LoginForm> {
     final isStartButtonActive = context.select(
       (LoginModel model) => model.isStartButtonActive,
     );
+    final isLoading = context.select(
+      (LoginModel model) => model.isLoading,
+    );
 
     Widget phoneField() => TextFormField(
           focusNode: model.phoneFieldFocus,
@@ -51,7 +54,6 @@ class _LoginFormState extends State<LoginForm> {
           focusNode: model.certFieldFocus,
           controller: model.certFieldController,
           onChanged: model.onCertFieldChanged,
-          validator: model.certFieldValidator,
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.number,
           maxLength: 6,
@@ -70,7 +72,7 @@ class _LoginFormState extends State<LoginForm> {
         );
 
     Widget startButton() => ElevatedButton(
-          child: Text('동의하고 시작하기'),
+          child: Text(isLoading ? '로딩중...' : '동의하고 시작하기'),
           onPressed: isStartButtonActive ? model.onStartButtonPressed : null,
         );
 

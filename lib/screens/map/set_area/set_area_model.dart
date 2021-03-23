@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:potato_market/services/cloud_services.dart';
 
 import '../../../services/navigation_services.dart';
 import '../../../services/location_services.dart';
@@ -87,7 +88,8 @@ class SetAreaModel with ChangeNotifier {
     }
     _updateArea();
     LocalServices().updateArea(_newArea);
-    NavigationServices.toLogin(_key.currentContext);
+    await CloudServices().addArea(_newArea, LocalServices().profile.uid);
+    NavigationServices.toBase(_key.currentContext);
   }
 
   Future<void> _updateCount() async {
@@ -133,6 +135,8 @@ class SetAreaModel with ChangeNotifier {
     );
   }
 
+  ///////////////////
+  // getter, setter
   LatLng get myPosition => _myPosition;
   set setMapController(GoogleMapController controller) =>
       _mapController = controller;
