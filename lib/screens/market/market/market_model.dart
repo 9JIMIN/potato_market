@@ -16,12 +16,11 @@ class MarketModel extends ChangeNotifier {
     fetchProducts();
   }
 
-  List<Product> _list = List<Product>();
+  List<Product> _list = [];
   bool _isAppendDone = true;
 
   // product 업데이트
   Future<void> fetchProducts() async {
-    print(LocalServices().area.name);
     final QuerySnapshot query = await FirebaseFirestore.instance
         .collection('product')
         .orderBy('createdAt', descending: true)

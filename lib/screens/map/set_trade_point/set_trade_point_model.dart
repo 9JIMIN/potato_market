@@ -9,10 +9,10 @@ import '../../../services/navigation_services.dart';
 import '../../../services/location_services.dart';
 import '../../../widgets/widget_services.dart';
 import '../../../services/local_services.dart';
-import '../../../models/trade_point.dart';
+import '../../../models/spot.dart';
 import '../../../secrets.dart';
 
-class SetTradePointModel with ChangeNotifier {
+class SetSpotModel with ChangeNotifier {
   LatLng _initialPosition;
   GoogleMapController _mapController;
   String _fullAddress;
@@ -22,8 +22,8 @@ class SetTradePointModel with ChangeNotifier {
   TextEditingController _nameFieldController = TextEditingController();
 
   Future<void> onMapFutureBuild(BuildContext context) async {
-    final lat = LocalServices().tradePoint.lat;
-    final lng = LocalServices().tradePoint.lng;
+    final lat = LocalServices().spot.lat;
+    final lng = LocalServices().spot.lng;
     if (lat == null && lng == null) {
       _initialPosition = await LocationServices.getMyPosition(context);
     } else {
@@ -48,16 +48,17 @@ class SetTradePointModel with ChangeNotifier {
     if (name == '') {
       WidgetServices.showSnack(_nameFormKey.currentContext, '장소의 이름을 입력해주세요');
     } else {
-      final newTradePoint = TradePoint(
+      final newSpot = Spot(
         lat: _pointCenter.latitude,
         lng: _pointCenter.longitude,
         name: name,
+        address: _fullAddress,
       );
-      LocalServices().updateTradePoint(newTradePoint);
+      LocalServices().updateSpot(newSpot);
       // TODO: 에디터 notifyListener(거래장소 업데이트)
       Navigator.of(_nameFormKey.currentContext).pop();
       dispose();
-      Navigator.of(_nameFormKey.currentContext).pop(newTradePoint);
+      Navigator.of(_nameFormKey.currentContext).pop(newSpot);
     }
   }
 

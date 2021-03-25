@@ -42,7 +42,6 @@ class _MarketListViewState extends State<MarketListView> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<MarketModel>(context);
-    log(LocalServices().area.radius.toString());
     return Builder(
       builder: (context) => model.list.isEmpty
           ? Center(

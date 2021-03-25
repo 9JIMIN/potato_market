@@ -4,10 +4,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'set_trade_point_model.dart';
 
-class SetTradePointView extends StatelessWidget {
+class SetSpotView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<SetTradePointModel>(context, listen: false);
+    final model = Provider.of<SetSpotModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('거래장소 선택'),
@@ -16,7 +16,7 @@ class SetTradePointView extends StatelessWidget {
         future: model.onMapFutureBuild(context),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           final isMoving = context.select(
-            (SetTradePointModel model) => model.isButtonVisible,
+            (SetSpotModel model) => model.isButtonVisible,
           );
 
           GoogleMap googleMap() => GoogleMap(

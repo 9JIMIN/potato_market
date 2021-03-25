@@ -7,13 +7,13 @@ import '../product_editor_model.dart';
 class EditorBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final tradePoint = context.select(
-      (ProductEditorModel model) => model.tradePoint,
+    final spot = context.select(
+      (ProductEditorModel model) => model.spot,
     );
 
     return ListTile(
       title: Text(
-        tradePoint.name == null ? '거래장소' : tradePoint.name,
+        spot.name == null ? '거래장소' : spot.name,
       ),
       onTap: Provider.of<ProductEditorModel>(
         context,

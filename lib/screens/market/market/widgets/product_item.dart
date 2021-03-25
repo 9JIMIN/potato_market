@@ -14,7 +14,7 @@ class ProductItem extends StatelessWidget {
 
     final title = item.title;
     final imageUrl = item.imageUrls[0];
-    final pointName = item.tradePoint['name'];
+    final pointName = item.spot['name'];
     final time = FormatServices.date(item.createdAt.toDate());
     final price = FormatServices.price(item.price);
     return Row(

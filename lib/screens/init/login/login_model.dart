@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -121,6 +123,10 @@ class LoginModel with ChangeNotifier {
           NavigationServices.toSetAreaRange(_key.currentContext);
         } else {
           local.updateArea(activeArea);
+          final spot = await CloudServices().getRecentSpot(uid);
+          if (spot != null) {
+            LocalServices().updateSpot(spot);
+          }
           NavigationServices.toBase(_key.currentContext);
         }
       }

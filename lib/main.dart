@@ -40,7 +40,7 @@ void main() async {
           create: (_) => MarketModel(),
         ),
         ChangeNotifierProvider(
-          create: (_) => SetTradePointModel(),
+          create: (_) => SetSpotModel(),
         ),
       ],
       child: App(),

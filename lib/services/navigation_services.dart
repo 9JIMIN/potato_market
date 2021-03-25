@@ -10,7 +10,7 @@ import '../screens/init/login/login_view.dart';
 import '../screens/market/product_editor/product_editor_view.dart';
 import '../screens/community/post_editor/post_editor_screen.dart';
 
-import '../models/trade_point.dart';
+import '../models/spot.dart';
 
 class NavigationServices {
   static void toSetAreaRange(BuildContext context) {
@@ -61,9 +61,9 @@ class NavigationServices {
     );
   }
 
-  static Future<TradePoint> toSetTradePoint(BuildContext context) async {
+  static Future<Spot> toSetSpot(BuildContext context) async {
     final result = await Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => SetTradePointView()),
+      MaterialPageRoute(builder: (context) => SetSpotView()),
     );
     if (result != null) {
       return result;

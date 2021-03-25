@@ -12,7 +12,7 @@ class Product {
   final String sellerId;
   final Timestamp createdAt;
   final String status;
-  final Map<String, dynamic> tradePoint;
+  final Map<String, dynamic> spot;
 
   Product({
     this.title,
@@ -25,7 +25,7 @@ class Product {
     this.sellerId,
     this.createdAt,
     this.status = '판매중',
-    this.tradePoint,
+    this.spot,
   });
 
   // fromQuery
@@ -43,7 +43,7 @@ class Product {
         sellerId: doc['sellerId'],
         createdAt: doc['createdAt'],
         status: doc['status'],
-        tradePoint: doc['tradePoint'],
+        spot: doc['Spot'],
       );
     }).toList();
   }
@@ -60,7 +60,7 @@ class Product {
       'sellerId': product.sellerId,
       'createdAt': product.createdAt,
       'status': product.status,
-      'tradePoint': product.tradePoint,
+      'Spot': product.spot,
     };
   }
 }

@@ -18,8 +18,8 @@ class Area {
   static Area fromQuery(DocumentSnapshot query) {
     final doc = query.data();
     return Area(
-      lat: doc['lat'],
-      lng: doc['lng'],
+      lat: doc['point']['geopoint'].latitude,
+      lng: doc['point']['geopoint'].longitude,
       radius: doc['radius'],
       name: doc['name'],
       active: doc['active'],

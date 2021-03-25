@@ -12,11 +12,11 @@ import '../../../widgets/widget_services.dart';
 import '../../../services/local_services.dart';
 import '../../../services/navigation_services.dart';
 import '../../../models/product.dart';
-import '../../../models/trade_point.dart';
+import '../../../models/spot.dart';
 
 class ProductEditorModel with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
-  List<Asset> _imageAssets = List<Asset>();
+  List<Asset> _imageAssets = [];
   List<String> _categoryList = [
     '디지털/가전',
     '가구/인테리어',
@@ -37,8 +37,8 @@ class ProductEditorModel with ChangeNotifier {
   String _category;
   String _price;
   String _description;
-  TradePoint _tradePoint = LocalServices().tradePoint;
   bool _isLoading = false;
+  Spot _spot = LocalServices().spot;
 
   void onImageRemoved(int index) {
     _imageAssets.removeAt(index);
@@ -93,10 +93,9 @@ class ProductEditorModel with ChangeNotifier {
   }
 
   void onPositionPressed() async {
-    final tradePoint =
-        await NavigationServices.toSetTradePoint(_formKey.currentContext);
-    if (tradePoint != null) {
-      _tradePoint = tradePoint;
+    final spot = await NavigationServices.toSetSpot(_formKey.currentContext);
+    if (spot != null) {
+      _spot = spot;
       notifyListeners();
     }
   }
@@ -119,7 +118,7 @@ class ProductEditorModel with ChangeNotifier {
       WidgetServices.showSnack(_formKey.currentContext, '설명을 입력해주세요');
       return;
     }
-    if (_tradePoint.name == '') {
+    if (_spot.name == '') {
       WidgetServices.showSnack(_formKey.currentContext, '거래장소를 선택해주세요');
       return;
     }
@@ -144,7 +143,7 @@ class ProductEditorModel with ChangeNotifier {
         imageUrls: imageUrls,
         createdAt: createdAt,
         sellerId: sellerId,
-        tradePoint: TradePoint.toJson(_tradePoint),
+        spot: Spot.toJson(_spot),
       );
 
       await CloudServices().createProduct(newProduct);
@@ -168,7 +167,7 @@ class ProductEditorModel with ChangeNotifier {
   String get category => _category;
   bool get isLoading => _isLoading;
   List<String> get categoryList => _categoryList;
-  TradePoint get tradePoint => _tradePoint;
+  Spot get spot => _spot;
 
   set setTitle(String title) => _title = title;
   set setPrice(String price) => _price = price;

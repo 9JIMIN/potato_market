@@ -6,7 +6,7 @@ import 'set_trade_point_model.dart';
 class SetPointNameView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<SetTradePointModel>(context, listen: false);
+    final model = Provider.of<SetSpotModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
