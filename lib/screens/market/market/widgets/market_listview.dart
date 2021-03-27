@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../market_model.dart';
+import '../market_provider.dart';
 import 'product_item.dart';
-
-import '../../../../services/local_services.dart';
 
 class MarketListView extends StatefulWidget {
   @override
@@ -18,7 +14,7 @@ class _MarketListViewState extends State<MarketListView> {
   bool oldState = false;
   bool newState = false;
   _scrollListener() async {
-    final model = context.read<MarketModel>();
+    final model = context.read<MarketProvider>();
     if (_controller.position.maxScrollExtent - _controller.position.pixels <
             100 &&
         model.isAppendDone) {
@@ -41,7 +37,7 @@ class _MarketListViewState extends State<MarketListView> {
 
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<MarketModel>(context);
+    final model = Provider.of<MarketProvider>(context);
     return Builder(
       builder: (context) => model.list.isEmpty
           ? Center(

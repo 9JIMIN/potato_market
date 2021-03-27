@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/product.dart';
-import '../../../../services/format_services.dart';
-import '../market_model.dart';
+import '../../../../utils/helpers/text_helper.dart';
+import '../../../../models/item.dart';
+import '../market_provider.dart';
 
 class ProductItem extends StatelessWidget {
-  final Product item;
+  final Item item;
   ProductItem(this.item);
   @override
   Widget build(BuildContext context) {
-    final model = Provider.of<MarketModel>(context, listen: false);
+    final model = Provider.of<MarketProvider>(context, listen: false);
 
     final title = item.title;
     final imageUrl = item.imageUrls[0];
     final pointName = item.spot['name'];
-    final time = FormatServices.date(item.createdAt.toDate());
-    final price = FormatServices.price(item.price);
+    final time = TextHelper.date(item.createdAt.toDate());
+    final price = TextHelper.price(item.price);
     return Row(
       children: [
         SizedBox(
@@ -40,18 +40,5 @@ class ProductItem extends StatelessWidget {
         )
       ],
     );
-    // ListTile(
-    //     leading: Image.network('$firstImage'),
-    //     title: Text(title),
-    //     subtitle: Text('$price'),
-    //     trailing: Column(
-    //       children: [
-    //         Text('like: $likeCount'),
-    //         Text('chat: $chatCount'),
-    //       ],
-    //     ),
-    //     onTap: () {
-    //       model.onItemTap(context, i);
-    //     });
   }
 }

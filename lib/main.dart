@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:potato_market/screens/core/splash/app_splash_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/init/splash/splash_view.dart';
-
 // provider
-import 'screens/init/base/base_model.dart';
-import 'screens/map/set_trade_point/set_trade_point_model.dart';
-import 'screens/map/set_area/set_area_model.dart';
-import 'screens/init/login/login_model.dart';
-import 'screens/account/profile_editor/profile_editor_model.dart';
-import 'screens/market/market/market_model.dart';
+import 'screens/core/base/base_provider.dart';
+import 'screens/auth/login/login_provider.dart';
+import 'screens/my/my_spot_setting/my_spot_setting_provider.dart';
+import 'screens/profile/profile_editor/profile_editor_provider.dart';
+import 'screens/market/market/market_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,22 +23,22 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => SetAreaModel(),
+          create: (_) => MySpotSettingProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => BaseModel(),
+          create: (_) => BaseProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => LoginModel(),
+          create: (_) => LoginProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => ProfileEditorModel(),
+          create: (_) => ProfileEditorProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => MarketModel(),
+          create: (_) => MarketProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => SetSpotModel(),
+          create: (_) => MySpotSettingProvider(),
         ),
       ],
       child: App(),
@@ -52,7 +50,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SplashView(),
+      home: AppSplashScreen(),
     );
   }
 }
