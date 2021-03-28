@@ -11,7 +11,7 @@ import '../../../screens/auth/login/login_screen.dart';
 import '../../../screens/market/item_editor/item_editor_screen.dart';
 
 class NavigationService {
-  static void toSetAreaRange(BuildContext context) {
+  static void toMyAreaSettingRange(BuildContext context) {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => MyAreaSettingRange()),
@@ -19,7 +19,7 @@ class NavigationService {
     );
   }
 
-  static void toSetAreaName(BuildContext context) {
+  static void toMyAreaSettingName(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => MyAreaSettingName()),
     );
@@ -53,9 +53,9 @@ class NavigationService {
     );
   }
 
-  static Future<Spot> toSetSpot(BuildContext context) async {
+  static Future<Spot> toMySpotSettingPoint(BuildContext context) async {
     final result = await Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => SetSpotView()),
+      MaterialPageRoute(builder: (context) => MySpotSettingPoint()),
     );
     if (result != null) {
       return result;
@@ -63,9 +63,9 @@ class NavigationService {
     return null;
   }
 
-  static void toSetPointName(BuildContext context) {
+  static void toMySpotSettingName(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => SetPointNameView()),
+      MaterialPageRoute(builder: (context) => MySpotSettingName()),
     );
   }
 }

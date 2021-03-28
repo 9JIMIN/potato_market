@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'my_spot_setting_provider.dart';
 
-class SetSpotView extends StatelessWidget {
+class MySpotSettingPoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<MySpotSettingProvider>(context, listen: false);

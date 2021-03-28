@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'my_spot_setting_provider.dart';
 
-class SetPointNameView extends StatelessWidget {
+class MySpotSettingName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<MySpotSettingProvider>(context, listen: false);

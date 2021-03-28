@@ -40,7 +40,7 @@ class MySpotSettingProvider with ChangeNotifier {
   // 등록버튼 클릭시
   void onPointButtonPressed(BuildContext context) async {
     await _updateCenter(context);
-    NavigationService.toSetPointName(context);
+    NavigationService.toMySpotSettingName(context);
   }
 
   // 위치저장버튼 클릭시

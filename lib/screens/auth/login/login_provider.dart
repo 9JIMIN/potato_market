@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:potato_market/utils/ui/widgets/show_snackbar.dart';
 
-import '../../../utils/ui/widgets/show_dialog.dart';
 import '../../../utils/services/firebase/auth_service.dart';
 import '../../../utils/services/firebase/database_service.dart';
 import '../../../utils/services/local/local_storage_service.dart';
@@ -121,7 +118,7 @@ class LoginProvider with ChangeNotifier {
         local.updateProfile(myProfile);
         final activeArea = await DatabaseService().getActiveArea(uid);
         if (activeArea == null) {
-          NavigationService.toSetAreaRange(_key.currentContext);
+          NavigationService.toMyAreaSettingRange(_key.currentContext);
         } else {
           local.updateArea(activeArea);
           final spot = await DatabaseService().getRecentSpot(uid);

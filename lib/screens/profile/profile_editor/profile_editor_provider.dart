@@ -99,7 +99,7 @@ class ProfileEditorProvider with ChangeNotifier {
     );
     await DatabaseService().createUser(profile);
     LocalStorageService().updateProfile(profile);
-    NavigationService.toSetAreaRange(_formKey.currentContext);
+    NavigationService.toMyAreaSettingRange(_formKey.currentContext);
   }
 
   GlobalKey get formKey => _formKey;

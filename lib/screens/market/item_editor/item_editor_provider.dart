@@ -96,7 +96,8 @@ class ItemEditorProvider with ChangeNotifier {
   }
 
   void onPositionPressed() async {
-    final spot = await NavigationService.toSetSpot(_formKey.currentContext);
+    final spot =
+        await NavigationService.toMySpotSettingPoint(_formKey.currentContext);
     if (spot != null) {
       _spot = spot;
       notifyListeners();

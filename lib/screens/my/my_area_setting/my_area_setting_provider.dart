@@ -78,7 +78,7 @@ class MyAreaSettingProvider with ChangeNotifier {
 
   // 5. 다음버튼 클릭
   void onNextPressed() {
-    NavigationService.toSetAreaName(_key.currentContext);
+    NavigationService.toMyAreaSettingName(_key.currentContext);
   }
 
   // 6. 저장버튼 클릭
