@@ -35,6 +35,33 @@ class DatabaseService {
   }
 
   // Area
+  Future<List<Area>> getAreaList(String uid) async {
+    final query =
+        await _instance.collection('profile').doc(uid).collection('area').get();
+
+    if (query.docs.isNotEmpty) {
+      final areaList = query.docs.map((e) => Area.fromQuery(e)).toList();
+      return areaList;
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> changeCurrentArea(Area newArea) async {
+    final uid = LocalStorageService().profile.uid;
+    // area에 id 만들어주기.
+    // final areaId = LocalStorageService().arae.id; 
+    
+    // Active = ture인 Area를 False로 바꾸고, 새로운 Area를 True로 설정
+    // Area에도 id를 부여해주자.
+    final doc = await _instance
+        .collection('profile')
+        .doc(uid)
+        .collection('area')
+        .doc()
+    
+  }
+
   Future<void> addArea(Area area, String uid) async {
     GeoFirePoint point = _geo.point(
       latitude: area.lat,

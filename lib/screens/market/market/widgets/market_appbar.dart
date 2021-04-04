@@ -12,9 +12,18 @@ class MarketAppbar extends StatelessWidget implements PreferredSizeWidget {
     final model = Provider.of<MarketProvider>(context, listen: false);
     final currentArea = LocalStorageService().area;
     return AppBar(
-      title: DropdownButton(
-        value: currentArea,
-        items: [],
+      title: ElevatedButton(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(currentArea.name),
+            SizedBox(width: 10),
+            Icon(Icons.swap_horiz),
+          ],
+        ),
+        onPressed: () {
+          model.onAreaTap(context);
+        },
       ),
       actions: [
         IconButton(

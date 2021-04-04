@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:potato_market/utils/services/firebase/database_service.dart';
+import 'package:potato_market/utils/services/local/local_storage_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/item.dart';
@@ -67,10 +69,49 @@ class MarketProvider extends ChangeNotifier {
     );
   }
 
-  void onSearchPressed(BuildContext context) {}
+  void onAreaTap(BuildContext context) async {
+    final uid = LocalStorageService().profile.uid;
+    final areaList = await DatabaseService().getAreaList(uid);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('구역 고르기'),
+          children: areaList
+              .map(
+                (area) => SimpleDialogOption(
+                  onPressed: () async {
+                    // DB 업데이트
+                    // 로컬 area 업데이트
+                    // Item 리스트 업데이트
+                    // Navigation.pop()
+
+                    await DatabaseService().changeCurrentArea(area);
+                  },
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(area.name),
+                      if (area.active) Icon(Icons.check),
+                    ],
+                  ),
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
+
+  void onSearchTap(BuildContext context) {
+    //
+  }
 
   // 에디터 버튼
-  void onFloatPressed(BuildContext context) async {
+  void onFloatTap(BuildContext context) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ItemEditorScreen(),

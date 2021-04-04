@@ -10,7 +10,7 @@ class MarketFloatButton extends StatelessWidget {
       Provider.of<MarketProvider>(
         context,
         listen: false,
-      ).onFloatPressed(context);
+      ).onFloatTap(context);
     });
   }
 }

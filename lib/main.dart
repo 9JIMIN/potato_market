@@ -10,6 +10,7 @@ import 'screens/core/base/base_provider.dart';
 import 'screens/auth/login/login_provider.dart';
 import 'screens/my/my_spot_setting/my_spot_setting_provider.dart';
 import 'screens/profile/profile_editor/profile_editor_provider.dart';
+import 'screens/my/my_account/my_account_provider.dart';
 import 'screens/market/market/market_provider.dart';
 
 void main() async {
@@ -26,6 +27,9 @@ void main() async {
           create: (_) => MySpotSettingProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => MyAccountProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => BaseProvider(),
         ),
         ChangeNotifierProvider(
@@ -36,9 +40,6 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => MarketProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => MySpotSettingProvider(),
         ),
       ],
       child: App(),
