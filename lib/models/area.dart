@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Area {
-  final lat;
-  final lng;
-  final radius;
-  final name;
-  final active;
+  final String id;
+  final double lat;
+  final double lng;
+  final double radius;
+  final String name;
+  final bool active;
 
   Area({
+    this.id,
     this.lat,
     this.lng,
     this.radius,
@@ -18,6 +20,7 @@ class Area {
   static Area fromQuery(DocumentSnapshot query) {
     final doc = query.data();
     return Area(
+      id: doc['id'],
       lat: doc['point']['geopoint'].latitude,
       lng: doc['point']['geopoint'].longitude,
       radius: doc['radius'],

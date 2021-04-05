@@ -14,22 +14,19 @@ class LocalStorageService {
   Profile _profile;
   Area _area;
   Spot _spot;
-  Map<String, bool> _productCategories;
-  Map<String, bool> _workCategories;
+  Map<String, bool> _itemCategories;
 
   Profile get profile => _profile;
   Area get area => _area;
   Spot get spot => _spot;
-  Map<String, bool> get productCategories => _productCategories;
-  Map<String, bool> get workCategories => _workCategories;
+  Map<String, bool> get itemCategories => _itemCategories;
 
   LocalStorageService fetchData() {
     _localBox = Hive.box('localBox');
     fetchProfile();
     fetchArea();
     fetchSpot();
-    fetchProductCategories();
-    fetchWorkCategories();
+    fetchItemCategories();
     return this;
   }
 
@@ -60,18 +57,10 @@ class LocalStorageService {
         address: _localBox.get('spotAddress'));
   }
 
-  void fetchProductCategories() {
-    _productCategories = {
+  void fetchItemCategories() {
+    _itemCategories = {
       'cloth': _localBox.get('cloth'),
       'digital': _localBox.get('digital'),
-      'etc': _localBox.get('etc'),
-    };
-  }
-
-  void fetchWorkCategories() {
-    _workCategories = {
-      'cleanning': _localBox.get('cleanning'),
-      'delivery': _localBox.get('delivery'),
       'etc': _localBox.get('etc'),
     };
   }
@@ -101,14 +90,9 @@ class LocalStorageService {
     fetchSpot();
   }
 
-  void updateProductCategories(Map<String, bool> productCategories) {
-    _localBox.putAll(productCategories);
-    fetchProductCategories();
-  }
-
-  void updateWorkCategories(Map<String, bool> workCategories) {
-    _localBox.putAll(workCategories);
-    fetchWorkCategories();
+  void updateProductCategories(Map<String, bool> itemCategories) {
+    _localBox.putAll(itemCategories);
+    fetchItemCategories();
   }
 
   // delete

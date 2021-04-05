@@ -116,7 +116,7 @@ class LoginProvider with ChangeNotifier {
         NavigationService.toProfileEditor(_key.currentContext);
       } else {
         local.updateProfile(myProfile);
-        final activeArea = await DatabaseService().getActiveArea(uid);
+        final activeArea = await DatabaseService().getActiveArea();
         if (activeArea == null) {
           NavigationService.toMyAreaSettingRange(_key.currentContext);
         } else {

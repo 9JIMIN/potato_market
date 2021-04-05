@@ -48,26 +48,43 @@ class DatabaseService {
   }
 
   Future<void> changeCurrentArea(Area newArea) async {
-    final uid = LocalStorageService().profile.uid;
-    // area에 id 만들어주기.
-    // final areaId = LocalStorageService().arae.id; 
-    
-    // Active = ture인 Area를 False로 바꾸고, 새로운 Area를 True로 설정
-    // Area에도 id를 부여해주자.
-    final doc = await _instance
+    final profileId = LocalStorageService().profile.uid;
+    final activeAreaId = LocalStorageService().area.id;
+
+    await _instance
         .collection('profile')
-        .doc(uid)
+        .doc(profileId)
         .collection('area')
-        .doc()
-    
+        .doc(activeAreaId)
+        .update({'active': false});
+
+    await _instance
+        .collection('profile')
+        .doc(profileId)
+        .collection('area')
+        .doc(newArea.id)
+        .update({'active': true});
   }
 
-  Future<void> addArea(Area area, String uid) async {
+  Future<void> addArea(Area area) async {
+    final profileId = LocalStorageService().profile.uid;
+    final newAreaId = _instance
+        .collection('profile')
+        .doc(profileId)
+        .collection('area')
+        .doc()
+        .id;
     GeoFirePoint point = _geo.point(
       latitude: area.lat,
       longitude: area.lng,
     );
-    await _instance.collection('profile').doc(uid).collection('area').add({
+
+    await _instance
+        .collection('profile')
+        .doc(profileId)
+        .collection('area')
+        .add({
+      'id': newAreaId,
       'name': area.name,
       'point': point.data,
       'radius': area.radius,
@@ -75,10 +92,11 @@ class DatabaseService {
     });
   }
 
-  Future<Area> getActiveArea(String uid) async {
+  Future<Area> getActiveArea() async {
+    final profileId = LocalStorageService().profile.uid;
     final query = await _instance
         .collection('profile')
-        .doc(uid)
+        .doc(profileId)
         .collection('area')
         .where('active', isEqualTo: true)
         .get();

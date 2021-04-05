@@ -38,7 +38,7 @@ class ItemCategorySettingProvider with ChangeNotifier {
   ];
 
   void fetchCategory() {
-    _categoryIsCheck = LocalStorageService().productCategories.values;
+    _categoryIsCheck = LocalStorageService().itemCategories.values;
   }
 
   void onCategoryTap(int index) {

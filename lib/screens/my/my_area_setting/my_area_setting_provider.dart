@@ -88,8 +88,7 @@ class MyAreaSettingProvider with ChangeNotifier {
     }
     _updateArea();
     LocalStorageService().updateArea(_newArea);
-    await DatabaseService()
-        .addArea(_newArea, LocalStorageService().profile.uid);
+    await DatabaseService().addArea(_newArea);
     NavigationService.toBase(_key.currentContext);
   }
 
