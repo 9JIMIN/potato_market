@@ -3,24 +3,23 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 
 class Spot {
   final String id;
-  final double lat;
-  final double lng;
+  final Map<String, double> point;
   final String name;
   final String address;
   final DateTime usedAt;
 
   Spot({
     this.id,
-    this.lat,
-    this.lng,
+    this.point,
     this.name,
     this.address,
     this.usedAt,
   });
 
   static Map<String, dynamic> toJson(Spot spot) {
-    final Map<String, double> point =
-        Geoflutterfire().point(latitude: spot.lat, longitude: spot.lng).data;
+    final Map<String, double> point = Geoflutterfire()
+        .point(latitude: spot.point['lat'], longitude: spot.point['lng'])
+        .data;
     return {
       'id': spot.id,
       'point': point,
@@ -32,10 +31,10 @@ class Spot {
 
   static Spot fromQuery(DocumentSnapshot query) {
     final doc = query.data();
+    final point = doc['point']['geopoint'];
     return Spot(
       id: doc['id'],
-      lat: doc['point']['geopoint'].latitude,
-      lng: doc['point']['geopoint'].longitude,
+      point: {'lat': point.latitude, 'lng': point.longitude},
       name: doc['name'],
       address: doc['address'],
       usedAt: doc['usedAt'],

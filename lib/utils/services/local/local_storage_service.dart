@@ -41,20 +41,25 @@ class LocalStorageService {
   }
 
   void fetchArea() {
+    final Map<String, double> point = _localBox.get('areaPoint');
     _area = Area(
-      lat: _localBox.get('areaLat'),
-      lng: _localBox.get('areaLng'),
-      radius: _localBox.get('areaRadius'),
+      id: _localBox.get('areaId'),
+      point: {'lat': point['lat'], 'lng': point['lng']},
       name: _localBox.get('areaName'),
+      radius: _localBox.get('areaRadius'),
+      active: _localBox.get('areaActive'),
     );
   }
 
   void fetchSpot() {
+    final Map<String, double> point = _localBox.get('spotPoint');
     _spot = Spot(
-        lat: _localBox.get('spotLat'),
-        lng: _localBox.get('spotLng'),
-        name: _localBox.get('spotName'),
-        address: _localBox.get('spotAddress'));
+      id: _localBox.get('spotId'),
+      point: {'lat': point['lat'], 'lng': point['lng']},
+      name: _localBox.get('spotName'),
+      address: _localBox.get('spotAddress'),
+      usedAt: _localBox.get('spotUsedAt'),
+    );
   }
 
   void fetchItemCategories() {
@@ -75,18 +80,20 @@ class LocalStorageService {
   }
 
   void updateArea(Area area) {
-    _localBox.put('areaLat', area.lat);
-    _localBox.put('areaLng', area.lng);
+    _localBox.put('areaId', area.id);
+    _localBox.put('areaPoint', area.point);
     _localBox.put('areaName', area.name);
     _localBox.put('areaRadius', area.radius);
+    _localBox.put('areaActive', area.active);
     fetchArea();
   }
 
   void updateSpot(Spot spot) {
-    _localBox.put('spotLat', spot.lat);
-    _localBox.put('spotLng', spot.lng);
+    _localBox.put('spotId', spot.id);
+    _localBox.put('spotLat', spot.point);
     _localBox.put('spotName', spot.name);
     _localBox.put('spotAddress', spot.address);
+    _localBox.put('spotUsedAt', spot.usedAt);
     fetchSpot();
   }
 

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 
 class Item {
+  final String id;
   final String title;
   final String category;
   final int price;
@@ -15,6 +16,7 @@ class Item {
   final Map<String, dynamic> spot;
 
   Item({
+    this.id,
     this.title,
     this.category,
     this.price,
@@ -33,6 +35,7 @@ class Item {
     return query.docs.map((docsSnapshot) {
       final doc = docsSnapshot.data();
       return Item(
+        id: doc['id'],
         title: doc['title'],
         category: doc['category'],
         price: doc['price'],
@@ -50,6 +53,7 @@ class Item {
 
   static Map<String, dynamic> toJson(Item item) {
     return {
+      'id': item.id,
       'title': item.title,
       'category': item.category,
       'price': item.price,
